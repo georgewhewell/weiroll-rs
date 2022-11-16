@@ -1,0 +1,13 @@
+[package]
+name = "weiroll"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+
+[dependencies]
+bitflags = "1"
+ethers = { git = "https://github.com/gakonst/ethers-rs" }
+
+[dev-dependencies]
+tokio = { version = "1.21.1", features = ["macros"] }

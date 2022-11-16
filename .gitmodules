@@ -1,0 +1,3 @@
+[submodule "weiroll"]
+	path = weiroll
+	url = https://github.com/weiroll/weiroll.git
