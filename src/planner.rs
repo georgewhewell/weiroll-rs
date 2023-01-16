@@ -13,7 +13,6 @@ type CommandKey = DefaultKey;
 #[derive(Debug, Default)]
 pub struct Planner {
     commands: HopSlotMap<CommandKey, Command>,
-    returns: Vec<ReturnValue>,
 }
 
 #[derive(Debug, Default)]
@@ -67,10 +66,8 @@ impl Planner {
             call,
             kind: CommandType::Call,
         });
-
-        let rv = ReturnValue { command };
-        self.returns.push(rv.clone());
-        Some(rv)
+        dbg!(command);
+        Some(ReturnValue { command })
     }
 
     pub fn subcall<M: Middleware, R: Detokenize>(
@@ -279,7 +276,7 @@ impl Planner {
 
     fn preplan(
         &self,
-        literal_visibility: &mut HashMap<Literal, CommandKey>,
+        literal_visibility: &mut Vec<(Literal, CommandKey)>,
         command_visibility: &mut HashMap<CommandKey, CommandKey>,
         seen: &mut HashSet<CommandKey>,
         _planners: &mut HashSet<Planner>,
@@ -304,7 +301,7 @@ impl Planner {
                         }
                     }
                     Value::LiteralValue(val) => {
-                        literal_visibility.insert(val.clone(), cmd_key);
+                        literal_visibility.push((val.clone(), cmd_key));
                     }
                     Value::StateValue(_) => todo!(),
                     Value::SubplanValue(_, _) => todo!(),
@@ -318,7 +315,7 @@ impl Planner {
 
     pub fn plan(&self) -> Result<(Vec<Bytes>, Vec<U256>), WeirollError> {
         // Tracks the last time a literal is used in the program
-        let mut literal_visibility: HashMap<Literal, CommandKey> = HashMap::new();
+        let mut literal_visibility: Vec<(Literal, CommandKey)> = Default::default();
 
         // Tracks the last time a command's output is used in the program
         let mut command_visibility: HashMap<CommandKey, CommandKey> = HashMap::new();
@@ -362,6 +359,8 @@ impl Planner {
         };
 
         let encoded_commands = self.build_commands(&mut ps)?;
+
+        dbg!(&state);
 
         Ok((encoded_commands, state))
     }
