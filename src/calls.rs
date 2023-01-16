@@ -1,20 +1,22 @@
-use ethers::abi::Detokenize;
-use ethers::prelude::builders::ContractCall;
 use ethers::prelude::*;
 
 use crate::cmds::{CommandFlags, Value};
 
+// pub trait FunctionInput: AbiEncode + std::fmt::Debug {}
+
+#[derive(Debug)]
 pub struct FunctionCall {
-    contract: Address,
-    flags: CommandFlags,
-    value: U256,
-    args: Vec<Value>,
+    pub(crate) address: Address,
+    pub(crate) selector: [u8; 4],
+    pub(crate) flags: CommandFlags,
+    pub(crate) value: Option<U256>,
+    pub(crate) args: Vec<Value>,
 }
 
 impl FunctionCall {
     fn with_value(mut self, value: U256) -> Self {
         self.flags = (self.flags & !CommandFlags::CALLTYPE_MASK) | CommandFlags::CALL_WITH_VALUE;
-        self.value = value;
+        self.value = Some(value);
         self
     }
 
@@ -32,14 +34,14 @@ impl FunctionCall {
     }
 }
 
-impl<M: Middleware, D: Detokenize> From<ContractCall<M, D>> for FunctionCall {
-    fn from(call: ContractCall<M, D>) -> Self {
-        let args = Vec::new();
-        Self {
-            contract: *call.tx.to_addr().unwrap(),
-            flags: CommandFlags::empty(),
-            args,
-            value: call.tx.value().cloned().unwrap_or_default(),
-        }
-    }
-}
+// impl<M: Middleware, D: Detokenize> From<ContractCall<M, D>> for FunctionCall {
+//     fn from(call: ContractCall<M, D>) -> Self {
+//         let args = Vec::new();
+//         Self {
+//             contract: *call.tx.to_addr().unwrap(),
+//             flags: CommandFlags::empty(),
+//             args,
+//             value: call.tx.value().cloned(),
+//         }
+//     }
+// }

@@ -7,3 +7,6 @@ src/bindings: weiroll/node_modules
 
 weiroll/node_modules:
 	cd weiroll && npm install
+
+clean:
+	rm -rf ./src/bindings
