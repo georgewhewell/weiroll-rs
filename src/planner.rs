@@ -2,7 +2,8 @@ use crate::calls::FunctionCall;
 use crate::cmds::{Command, CommandFlags, CommandType, Literal, ReturnValue, Value};
 use crate::error::WeirollError;
 
-use ethers::abi::{Detokenize, Token};
+use ethers::abi::Detokenize;
+use ethers::abi::{AbiDecode, AbiEncode, ParamType, Tokenizable};
 use ethers::prelude::builders::ContractCall;
 use ethers::prelude::*;
 use slotmap::{DefaultKey, HopSlotMap};
@@ -22,7 +23,7 @@ pub struct PlannerState {
     free_slots: Vec<U256>,
     state_expirations: HashMap<CommandKey, Vec<U256>>,
     command_visibility: HashMap<CommandKey, CommandKey>,
-    state: Vec<U256>,
+    state: Vec<Bytes>,
 }
 
 fn u256_bytes(u: U256) -> Bytes {
@@ -49,32 +50,91 @@ where
 }
 
 impl Planner {
-    pub fn call<'a, C: EthCall, R>(
+    pub fn call<'a, C: EthCall>(
         &mut self,
         address: Address,
         args: Vec<Value>,
-    ) -> Option<ReturnValue> {
+        return_type: ParamType,
+    ) -> Result<ReturnValue, WeirollError> {
+        let dynamic = return_type.is_dynamic();
         let call = FunctionCall {
             address,
             flags: CommandFlags::empty(),
             value: Some(U256::zero()),
             selector: C::selector(),
             args,
+            return_type,
         };
 
         let command = self.commands.insert(Command {
             call,
             kind: CommandType::Call,
         });
-        dbg!(command);
-        Some(ReturnValue { command })
+
+        Ok(ReturnValue { command, dynamic })
     }
 
-    pub fn subcall<M: Middleware, R: Detokenize>(
+    pub fn add_subplan<'a, C: EthCall>(
         &mut self,
-        _cmd: ContractCall<M, R>,
-    ) -> Option<ReturnValue> {
-        todo!()
+        address: Address,
+        args: Vec<Value>,
+        return_type: ParamType,
+    ) -> Result<ReturnValue, WeirollError> {
+        let dynamic = return_type.is_dynamic();
+
+        let mut has_subplan = false;
+        let mut has_state = false;
+
+        for arg in args.iter() {
+            match arg {
+                Value::Subplan(_planner) => {
+                    if has_subplan {
+                        return Err(WeirollError::MultipleSubplans);
+                    }
+                    has_subplan = true;
+                }
+                Value::State(_state) => {
+                    if has_state {
+                        return Err(WeirollError::MultipleState);
+                    }
+                    has_state = true;
+                }
+                _ => {}
+            }
+        }
+
+        if !has_subplan || !has_state {
+            return Err(WeirollError::MissingStateOrSubplan);
+        }
+
+        let command = self.commands.insert(Command {
+            call: FunctionCall {
+                address,
+                flags: CommandFlags::DELEGATECALL,
+                value: None,
+                selector: C::selector(),
+                args,
+                return_type,
+            },
+            kind: CommandType::SubPlan,
+        });
+
+        Ok(ReturnValue { dynamic, command })
+    }
+
+    pub fn replace_state<C: EthCall>(&mut self, address: Address, args: Vec<Value>) {
+        let call = FunctionCall {
+            address,
+            flags: CommandFlags::DELEGATECALL,
+            value: None,
+            selector: C::selector(),
+            args,
+            return_type: ParamType::Array(Box::new(ParamType::Bytes)),
+        };
+        self.commands.insert(Command {
+            call,
+            kind: CommandType::RawCall,
+        });
     }
 
     fn build_command_args(
@@ -82,14 +142,13 @@ impl Planner {
         command: &Command,
         return_slot_map: &HashMap<CommandKey, U256>,
         literal_slot_map: &HashMap<Literal, U256>,
-        state: &Vec<U256>,
+        state: &Vec<Bytes>,
     ) -> Result<Vec<U256>, WeirollError> {
         let in_args = Vec::from_iter(command.call.args.iter());
-        let mut extra_args = vec![];
+        let mut extra_args: Vec<Value> = vec![];
         if command.call.flags & CommandFlags::CALLTYPE_MASK == CommandFlags::CALL_WITH_VALUE {
             if let Some(value) = command.call.value {
-                let value = Value::LiteralValue(Literal(Token::Uint(value)));
-                extra_args.push(value);
+                extra_args.push(Value::Literal(value.into()));
             } else {
                 return Err(WeirollError::MissingValue);
             }
@@ -98,27 +157,26 @@ impl Planner {
         let mut args = vec![];
         for arg in in_args.into_iter().chain(extra_args.iter()) {
             let mut slot = match arg {
-                Value::ReturnValue(val) => {
+                Value::Return(val) => {
                     if let Some(slot) = return_slot_map.get(&val.command) {
                         *slot
                     } else {
                         return Err(WeirollError::MissingReturnSlot);
                     }
                 }
-                Value::LiteralValue(val) => {
+                Value::Literal(val) => {
                     if let Some(slot) = literal_slot_map.get(val) {
                         *slot
                     } else {
                         return Err(WeirollError::MissingLiteralValue);
                     }
                 }
-                Value::StateValue(_) => U256::from(0xFE),
-                Value::SubplanValue(_, _) => {
+                Value::State(_) => U256::from(0xFE),
+                Value::Subplan(_) => {
                     // buildCommands has already built the subplan and put it in the last state slot
-                    U256::from(state.len() + 1)
+                    U256::from(state.len() - 1)
                 }
             };
-
             // todo- correct??
             if arg.is_dynamic_type() {
                 slot |= U256::from(0x80);
@@ -142,22 +200,17 @@ impl Planner {
                     .args
                     .iter()
                     .find_map(|arg| match arg {
-                        Value::SubplanValue(_, planner) => Some(planner),
+                        Value::Subplan(planner) => Some(planner),
                         _ => None,
                     })
                     .ok_or(WeirollError::MissingSubplan)?;
 
                 // Build a list of commands
-                let _subcommands = subplanner.build_commands(ps)?;
+                let subcommands = subplanner.build_commands(ps)?;
 
-                // Encode them and push them to a new state slot
-                // ps.state.push(
-                //     hex_data_slice(
-                //         default_abi_coder::encode(&["bytes32[]"], &[subcommands]),
-                //         32,
-                //     )
-                //     .to_string(),
-                // );
+                // Push the commands onto the state
+                ps.state.push(subcommands.encode()[32..].to_vec().into());
+
                 // The slot is no longer needed after this command
                 ps.free_slots.push(U256::from(ps.state.len() - 1));
             }
@@ -175,13 +228,19 @@ impl Planner {
                 flags |= CommandFlags::EXTENDED_COMMAND;
             }
 
+            if let Some(expr) = ps.state_expirations.get(&cmd_key) {
+                ps.free_slots.extend(expr.iter().copied())
+            };
+
             // Add any newly unused state slots to the list
-            ps.free_slots = ps
-                .free_slots
-                .iter()
-                .chain(ps.state_expirations.get(&cmd_key).unwrap())
-                .copied()
-                .collect();
+            // ps.free_slots = ps
+            //     .free_slots
+            //     .into_iter()
+            //     .chain(
+            //         // ps.state_expirations.get(&cmd_key).map(Clone::clone).iter(), // .unwrap_or_else(|| &vec![]),
+            //     )
+            //     // .copied()
+            //     .collect();
 
             // Figure out where to put the return value
             let mut ret = U256::from(0xff);
@@ -191,7 +250,6 @@ impl Planner {
                 }
 
                 ret = U256::from(ps.state.len());
-
                 if let Some(slot) = ps.free_slots.pop() {
                     ret = slot;
                 }
@@ -205,15 +263,13 @@ impl Planner {
                     .push(ret);
 
                 if ret == U256::from(ps.state.len()) {
-                    ps.state.push(U256::zero());
+                    ps.state.push(Bytes::default());
                 }
 
                 // todo: what's this?
-                tracing::warn!("something something call fragment");
-
-                // if command.call.fragment.outputs[0].is_dynamic_type() {
-                //     ret |= 0x80;
-                // }
+                if command.call.return_type.is_dynamic() {
+                    ret |= U256::from(0x80);
+                }
             } else if let CommandType::RawCall | CommandType::SubPlan = command.kind {
                 // todo: what's this?
                 // if command.call.fragment.outputs.len() == 1 {}
@@ -255,14 +311,15 @@ impl Planner {
                 // encoded_commands.push(hex_concat(&[pad_array(&args, 32, 0xff)]));
             } else {
                 // Standard command
+                dbg!(&args, &ret, &flags);
 
                 // todo: w.t.f
                 let mut bytes = vec![
                     command.call.selector.into(),
-                    flags.bits().to_le_bytes()[0..1].to_vec().into(),
+                    flags.bits().to_le_bytes().to_vec().into(),
                 ];
                 bytes.extend(
-                    pad_array(args, 6, U256::from(0xff))
+                    pad_array(args.clone(), 6, U256::from(0xff))
                         .iter()
                         .map(|o| u256_bytes(*o)[0..1].to_vec().into()),
                 );
@@ -271,6 +328,7 @@ impl Planner {
                 encoded_commands.push(concat_bytes(&bytes));
             }
         }
+
         Ok(encoded_commands)
     }
 
@@ -279,7 +337,7 @@ impl Planner {
         literal_visibility: &mut Vec<(Literal, CommandKey)>,
         command_visibility: &mut HashMap<CommandKey, CommandKey>,
         seen: &mut HashSet<CommandKey>,
-        _planners: &mut HashSet<Planner>,
+        planners: &mut HashSet<Planner>,
     ) -> Result<(), WeirollError> {
         for (cmd_key, command) in &self.commands {
             let in_args = &command.call.args;
@@ -287,7 +345,7 @@ impl Planner {
 
             if command.call.flags & CommandFlags::CALLTYPE_MASK == CommandFlags::CALL_WITH_VALUE {
                 if let Some(value) = command.call.value {
-                    extra_args.push(Value::LiteralValue(Literal(Token::Int(value))));
+                    extra_args.push(value.into());
                 } else {
                     return Err(WeirollError::MissingValue);
                 }
@@ -295,16 +353,23 @@ impl Planner {
 
             for arg in in_args.iter().chain(extra_args.iter()) {
                 match arg {
-                    Value::ReturnValue(val) => {
+                    Value::Return(val) => {
                         if seen.contains(&val.command) {
                             command_visibility.insert(val.command, cmd_key);
                         }
                     }
-                    Value::LiteralValue(val) => {
+                    Value::Literal(val) => {
+                        // Remove old visibility (if exists)
+                        literal_visibility.retain(|(l, _)| *l != *val);
                         literal_visibility.push((val.clone(), cmd_key));
                     }
-                    Value::StateValue(_) => todo!(),
-                    Value::SubplanValue(_, _) => todo!(),
+                    Value::State(_) => {}
+                    Value::Subplan(subplan) => {
+                        // let mut subplan_seen = Default::default();
+                        // if command.call.return_type.is_dynamic() {
+                        subplan.preplan(literal_visibility, command_visibility, seen, planners)?;
+                        // }
+                    }
                 }
             }
 
@@ -313,7 +378,7 @@ impl Planner {
         Ok(())
     }
 
-    pub fn plan(&self) -> Result<(Vec<Bytes>, Vec<U256>), WeirollError> {
+    pub fn plan(&self) -> Result<(Vec<Bytes>, Vec<Bytes>), WeirollError> {
         // Tracks the last time a literal is used in the program
         let mut literal_visibility: Vec<(Literal, CommandKey)> = Default::default();
 
@@ -336,12 +401,12 @@ impl Planner {
         // Tracks the state slot each literal is stored in
         let mut literal_slot_map: HashMap<Literal, U256> = Default::default();
 
-        let mut state: Vec<U256> = Default::default();
+        let mut state: Vec<Bytes> = Default::default();
 
         // Prepopulate the state and state expirations with literals
         for (literal, last_command) in literal_visibility {
             let slot = state.len();
-            state.push(literal.clone().into());
+            state.push(literal.bytes());
             state_expirations
                 .entry(last_command)
                 .or_insert_with(Vec::new)
@@ -349,39 +414,69 @@ impl Planner {
             literal_slot_map.insert(literal, slot.into());
         }
 
+        println!("state len is: {}", state.len());
         let mut ps = PlannerState {
             return_slot_map: Default::default(),
             literal_slot_map,
             free_slots: Default::default(),
             state_expirations,
             command_visibility,
-            state: state.clone(),
+            state,
         };
 
         let encoded_commands = self.build_commands(&mut ps)?;
 
-        dbg!(&state);
+        // dbg!(&state);
 
-        Ok((encoded_commands, state))
+        Ok((encoded_commands, ps.state))
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::bindings::math::AddCall;
+    use crate::bindings::{
+        math::AddCall,
+        strings::{StrcatCall, StrlenCall},
+    };
 
-    #[tokio::test]
-    async fn test_planner_add() {
+    abigen!(
+        SampleContract,
+        r#"[
+            function useState(bytes[] state) returns(bytes[])
+        ]"#,
+    );
+
+    abigen!(
+        SubplanContract,
+        r#"[
+            function execute(bytes32[] commands, bytes[] state) returns(bytes[])
+        ]"#,
+    );
+
+    abigen!(
+        ReadOnlySubplanContract,
+        r#"[
+            function execute(bytes32[] commands, bytes[] state)
+        ]"#,
+    );
+
+    fn addr() -> Address {
+        "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            .parse()
+            .unwrap()
+    }
+
+    #[test]
+    fn test_planner_add() {
         let mut planner = Planner::default();
         planner
-            .call::<AddCall, U256>(
-                "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-                    .parse()
-                    .unwrap(),
+            .call::<AddCall>(
+                addr(),
                 vec![U256::from(1).into(), U256::from(2).into()],
+                ParamType::Uint(256),
             )
-            .expect("can plan simple 1 + 2");
+            .expect("can add call");
         let (commands, state) = planner.plan().expect("plan");
 
         assert_eq!(commands.len(), 1);
@@ -393,7 +488,300 @@ mod tests {
         );
 
         assert_eq!(state.len(), 2);
-        assert_eq!(state[0], U256::from(1));
-        assert_eq!(state[1], U256::from(2));
+        assert_eq!(state[0], U256::from(1).encode());
+        assert_eq!(state[1], U256::from(2).encode());
+    }
+
+    #[test]
+    fn test_planner_deduplicates_literals() {
+        let mut planner = Planner::default();
+        planner
+            .call::<AddCall>(
+                addr(),
+                vec![U256::from(1).into(), U256::from(1).into()],
+                ParamType::Uint(256),
+            )
+            .expect("can add call");
+        let (_, state) = planner.plan().expect("plan");
+        assert_eq!(state.len(), 1);
+    }
+
+    #[test]
+    fn test_planner_return_values() {
+        let mut planner = Planner::default();
+        let ret = planner
+            .call::<AddCall>(
+                addr(),
+                vec![U256::from(1).into(), U256::from(2).into()],
+                ParamType::Uint(256),
+            )
+            .expect("can add call");
+        planner
+            .call::<AddCall>(
+                addr(),
+                vec![ret.into(), U256::from(3).into()],
+                ParamType::Uint(256),
+            )
+            .expect("can add call with return val");
+        let (commands, state) = planner.plan().expect("plan");
+        assert_eq!(commands.len(), 2);
+        assert_eq!(
+            commands[0],
+            "0x771602f7000001ffffffff01eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        assert_eq!(
+            commands[1],
+            "0x771602f7000102ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        assert_eq!(state.len(), 3);
+        assert_eq!(state[0], U256::from(1).encode());
+        assert_eq!(state[1], U256::from(2).encode());
+        assert_eq!(state[2], U256::from(3).encode());
+    }
+
+    #[test]
+    fn test_planner_intermediate_state_slots() {
+        // todo: how is this different from test_planner_return_values?
+        let mut planner = Planner::default();
+        let ret = planner
+            .call::<AddCall>(
+                addr(),
+                vec![U256::from(1).into(), U256::from(1).into()],
+                ParamType::Uint(256),
+            )
+            .expect("can add call");
+        planner
+            .call::<AddCall>(
+                addr(),
+                vec![U256::from(1).into(), ret.into()],
+                ParamType::Uint(256),
+            )
+            .expect("can add call with return val");
+        let (commands, state) = planner.plan().expect("plan");
+        assert_eq!(commands.len(), 2);
+        assert_eq!(
+            commands[0],
+            "0x771602f7000000ffffffff01eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        assert_eq!(
+            commands[1],
+            "0x771602f7000001ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        assert_eq!(state.len(), 2);
+        assert_eq!(state[0], U256::from(1).encode());
+        assert_eq!(state[1], Bytes::default());
+    }
+
+    #[test]
+    fn test_planner_dynamic_arguments() {
+        let mut planner = Planner::default();
+        planner
+            .call::<StrlenCall>(
+                addr(),
+                vec![String::from("Hello, world!").into()],
+                ParamType::Uint(256),
+            )
+            .expect("can add call");
+        let (commands, state) = planner.plan().expect("plan");
+        assert_eq!(commands.len(), 1);
+        assert_eq!(
+            commands[0],
+            "0x367bbd780080ffffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        assert_eq!(state.len(), 1);
+        assert_eq!(state[0], "Hello, world!".to_string().encode());
+    }
+
+    #[test]
+    fn test_planner_dynamic_return_values() {
+        let mut planner = Planner::default();
+        let ret = planner
+            .call::<StrcatCall>(
+                addr(),
+                vec![
+                    String::from("Hello, ").into(),
+                    String::from("world!").into(),
+                ],
+                ParamType::String,
+            )
+            .expect("can add call");
+        let (commands, state) = planner.plan().expect("plan");
+        assert_eq!(commands.len(), 1);
+        assert_eq!(
+            commands[0],
+            "0xd824ccf3008081ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        assert_eq!(state.len(), 2);
+        assert_eq!(state[0], "Hello, ".to_string().encode());
+        assert_eq!(state[1], "world!".to_string().encode());
+    }
+
+    #[test]
+    fn test_planner_dynamic_return_values_with_dynamic_arguments() {
+        let mut planner = Planner::default();
+        let ret = planner
+            .call::<StrcatCall>(
+                addr(),
+                vec![
+                    String::from("Hello, ").into(),
+                    String::from("world!").into(),
+                ],
+                ParamType::String,
+            )
+            .expect("can add call");
+        planner
+            .call::<StrlenCall>(addr(), vec![ret.into()], ParamType::Uint(256))
+            .expect("can add call with return val");
+        let (commands, state) = planner.plan().expect("plan");
+        assert_eq!(commands.len(), 2);
+        assert_eq!(
+            commands[0],
+            "0xd824ccf3008081ffffffff81eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        assert_eq!(
+            commands[1],
+            "0x367bbd780081ffffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        assert_eq!(state.len(), 2);
+        assert_eq!(state[0], "Hello, ".to_string().encode());
+        assert_eq!(state[1], "world!".to_string().encode());
+    }
+
+    #[test]
+    fn test_planner_argument_count_mismatch() {
+        let mut planner = Planner::default();
+        let ret = planner.call::<AddCall>(addr(), vec![U256::from(1).into()], ParamType::Uint(256));
+        assert_eq!(ret.err(), Some(WeirollError::ArgumentCountMismatch));
+    }
+
+    #[test]
+    fn test_planner_replace_state() {
+        let mut planner = Planner::default();
+        planner.replace_state::<UseStateCall>(addr(), vec![Value::State(Default::default())]);
+        let (commands, state) = planner.plan().expect("plan");
+        assert_eq!(commands.len(), 1);
+        assert_eq!(
+            commands[0],
+            "0x08f389c800fefffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        assert_eq!(state.len(), 0);
+    }
+
+    #[test]
+    fn test_planner_supports_subplans() {
+        let mut subplanner = Planner::default();
+        subplanner
+            .call::<AddCall>(
+                addr(),
+                vec![U256::from(1).into(), U256::from(2).into()],
+                ParamType::Uint(256),
+            )
+            .expect("can add call");
+        let mut planner = Planner::default();
+        let ret = planner
+            .add_subplan::<subplan_contract::ExecuteCall>(
+                addr(),
+                vec![Value::Subplan(subplanner), Value::State(Default::default())],
+                ParamType::Array(Box::new(ParamType::Bytes)),
+            )
+            .expect("can add subplan");
+        let (commands, state) = planner.plan().expect("plan");
+        assert_eq!(commands.len(), 1);
+        assert_eq!(
+            commands[0],
+            "0xde792d5f0082fefffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        assert_eq!(state.len(), 3);
+        assert_eq!(state[0], U256::from(1).encode());
+        assert_eq!(state[1], U256::from(2).encode());
+
+        // not sure what we are checking here
+        let subcommands_bytes = concat_bytes(&vec![
+            "0x0000000000000000000000000000000000000000000000000000000000000020"
+                .parse()
+                .unwrap(),
+            state[2].clone(),
+        ]);
+
+        // let decoded = Vec::<Bytes>::decode(subcommands_bytes).unwrap();
+        println!("state: {:?}", state);
+        assert_eq!(
+            state[2].clone(),
+            "0x771602f7000001ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        // let subcommands = &Vec::<Bytes>::decode(subcommands_bytes).unwrap()[0];
+        // let decoded: Vec<Vec<u8>> = Vec::<Vec<u8>>::decode(subcommands_bytes).unwrap();
+        // assert_eq!(decoded.len(), 1);
+        // assert_eq!(
+        //     Bytes::from(decoded[0].clone()),
+        //     "0x771602f7000001ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        //         .parse::<Bytes>()
+        //         .unwrap()
+        // );
+    }
+
+    #[test]
+    fn test_planner_allows_return_value_access_in_parent_scope() {
+        let mut subplanner = Planner::default();
+        let sum = subplanner
+            .call::<AddCall>(
+                addr(),
+                vec![U256::from(1).into(), U256::from(2).into()],
+                ParamType::Uint(256),
+            )
+            .expect("can add call");
+        let mut planner = Planner::default();
+        planner
+            .add_subplan::<subplan_contract::ExecuteCall>(
+                addr(),
+                vec![Value::Subplan(subplanner), Value::State(Default::default())],
+                ParamType::Array(Box::new(ParamType::Bytes)),
+            )
+            .expect("can add subplan");
+        planner
+            .call::<AddCall>(
+                addr(),
+                vec![sum.into(), U256::from(3).into()],
+                ParamType::Uint(256),
+            )
+            .expect("can add call");
+        let (commands, _) = planner.plan().expect("plan");
+        assert_eq!(commands.len(), 2);
+        assert_eq!(
+            commands[0],
+            // Invoke subplanner
+            "0xde792d5f0083fefffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
+        assert_eq!(
+            commands[0],
+            // sum + 3
+            "0x771602f7000102ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()
+        );
     }
 }

@@ -1,6 +1,6 @@
 use thiserror::Error;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, PartialEq)]
 pub enum WeirollError {
     #[error("unable to plan")]
     PlanError,
@@ -20,4 +20,16 @@ pub enum WeirollError {
 
     #[error("internal error: missing subplan")]
     MissingSubplan,
+
+    #[error("argument count mismatch")]
+    ArgumentCountMismatch,
+
+    #[error("Subplans can only take one planner argument")]
+    MultipleSubplans,
+
+    #[error("Subplans can only take one state argument")]
+    MultipleState,
+
+    #[error("Subplans must take planner and state arguments")]
+    MissingStateOrSubplan,
 }
