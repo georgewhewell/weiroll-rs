@@ -4,7 +4,7 @@ use crate::cmds::{CommandFlags, Value};
 
 // pub trait FunctionInput: AbiEncode + std::fmt::Debug {}
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct FunctionCall {
     pub(crate) address: Address,
     pub(crate) selector: [u8; 4],

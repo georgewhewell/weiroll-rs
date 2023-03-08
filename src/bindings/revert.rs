@@ -1,68 +1,440 @@
 pub use revert::*;
-#[allow(clippy::too_many_arguments, non_camel_case_types)]
+/// This module was auto-generated with ethers-rs Abigen.
+/// More information at: <https://github.com/gakonst/ethers-rs>
+#[allow(
+    clippy::enum_variant_names,
+    clippy::too_many_arguments,
+    clippy::upper_case_acronyms,
+    clippy::type_complexity,
+    dead_code,
+    non_camel_case_types,
+)]
 pub mod revert {
-    #![allow(clippy::enum_variant_names)]
-    #![allow(dead_code)]
-    #![allow(clippy::type_complexity)]
-    #![allow(unused_imports)]
-    ///Revert was auto-generated with ethers-rs Abigen. More information at: https://github.com/gakonst/ethers-rs
-    use std::sync::Arc;
-    use ::ethers::core::{
-        abi::{Abi, Token, Detokenize, InvalidOutputType, Tokenizable},
-        types::*,
-    };
-    use ::ethers::contract::{
-        Contract, builders::{ContractCall, Event},
-        Lazy,
-    };
-    use ::ethers::providers::Middleware;
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"fail\",\"outputs\":[]}]";
-    /// The parsed JSON-ABI of the contract.
+    ///The parsed JSON ABI of the contract.
     pub static REVERT_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("invalid abi"));
-    /// Bytecode of the #name contract
-    pub static REVERT_BYTECODE: ::ethers::contract::Lazy<::ethers::core::types::Bytes> = ::ethers::contract::Lazy::new(||
-    {
-        "0x6080604052348015600f57600080fd5b5060a68061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063a9cc471814602d575b600080fd5b60336035565b005b60405162461bcd60e51b815260206004820152600c60248201526b48656c6c6f20576f726c642160a01b604482015260640160405180910390fdfea2646970667358221220eb4b8060463ef3757ce2c7a7033729b710f0df2e3a265a48ce51d365c3e58bf964736f6c63430008110033"
-            .parse()
-            .expect("invalid bytecode")
-    });
+    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    #[rustfmt::skip]
+    const __BYTECODE: &[u8] = &[
+        96,
+        128,
+        96,
+        64,
+        82,
+        52,
+        128,
+        21,
+        96,
+        15,
+        87,
+        96,
+        0,
+        128,
+        253,
+        91,
+        80,
+        96,
+        166,
+        128,
+        97,
+        0,
+        30,
+        96,
+        0,
+        57,
+        96,
+        0,
+        243,
+        254,
+        96,
+        128,
+        96,
+        64,
+        82,
+        52,
+        128,
+        21,
+        96,
+        15,
+        87,
+        96,
+        0,
+        128,
+        253,
+        91,
+        80,
+        96,
+        4,
+        54,
+        16,
+        96,
+        40,
+        87,
+        96,
+        0,
+        53,
+        96,
+        224,
+        28,
+        128,
+        99,
+        169,
+        204,
+        71,
+        24,
+        20,
+        96,
+        45,
+        87,
+        91,
+        96,
+        0,
+        128,
+        253,
+        91,
+        96,
+        51,
+        96,
+        53,
+        86,
+        91,
+        0,
+        91,
+        96,
+        64,
+        81,
+        98,
+        70,
+        27,
+        205,
+        96,
+        229,
+        27,
+        129,
+        82,
+        96,
+        32,
+        96,
+        4,
+        130,
+        1,
+        82,
+        96,
+        12,
+        96,
+        36,
+        130,
+        1,
+        82,
+        107,
+        72,
+        101,
+        108,
+        108,
+        111,
+        32,
+        87,
+        111,
+        114,
+        108,
+        100,
+        33,
+        96,
+        160,
+        27,
+        96,
+        68,
+        130,
+        1,
+        82,
+        96,
+        100,
+        1,
+        96,
+        64,
+        81,
+        128,
+        145,
+        3,
+        144,
+        253,
+        254,
+        162,
+        100,
+        105,
+        112,
+        102,
+        115,
+        88,
+        34,
+        18,
+        32,
+        104,
+        3,
+        135,
+        126,
+        162,
+        81,
+        7,
+        70,
+        14,
+        23,
+        242,
+        240,
+        191,
+        127,
+        168,
+        91,
+        164,
+        226,
+        46,
+        1,
+        108,
+        183,
+        138,
+        53,
+        180,
+        45,
+        25,
+        240,
+        246,
+        60,
+        226,
+        37,
+        100,
+        115,
+        111,
+        108,
+        99,
+        67,
+        0,
+        8,
+        18,
+        0,
+        51,
+    ];
+    ///The bytecode of the contract.
+    pub static REVERT_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __BYTECODE,
+    );
+    #[rustfmt::skip]
+    const __DEPLOYED_BYTECODE: &[u8] = &[
+        96,
+        128,
+        96,
+        64,
+        82,
+        52,
+        128,
+        21,
+        96,
+        15,
+        87,
+        96,
+        0,
+        128,
+        253,
+        91,
+        80,
+        96,
+        4,
+        54,
+        16,
+        96,
+        40,
+        87,
+        96,
+        0,
+        53,
+        96,
+        224,
+        28,
+        128,
+        99,
+        169,
+        204,
+        71,
+        24,
+        20,
+        96,
+        45,
+        87,
+        91,
+        96,
+        0,
+        128,
+        253,
+        91,
+        96,
+        51,
+        96,
+        53,
+        86,
+        91,
+        0,
+        91,
+        96,
+        64,
+        81,
+        98,
+        70,
+        27,
+        205,
+        96,
+        229,
+        27,
+        129,
+        82,
+        96,
+        32,
+        96,
+        4,
+        130,
+        1,
+        82,
+        96,
+        12,
+        96,
+        36,
+        130,
+        1,
+        82,
+        107,
+        72,
+        101,
+        108,
+        108,
+        111,
+        32,
+        87,
+        111,
+        114,
+        108,
+        100,
+        33,
+        96,
+        160,
+        27,
+        96,
+        68,
+        130,
+        1,
+        82,
+        96,
+        100,
+        1,
+        96,
+        64,
+        81,
+        128,
+        145,
+        3,
+        144,
+        253,
+        254,
+        162,
+        100,
+        105,
+        112,
+        102,
+        115,
+        88,
+        34,
+        18,
+        32,
+        104,
+        3,
+        135,
+        126,
+        162,
+        81,
+        7,
+        70,
+        14,
+        23,
+        242,
+        240,
+        191,
+        127,
+        168,
+        91,
+        164,
+        226,
+        46,
+        1,
+        108,
+        183,
+        138,
+        53,
+        180,
+        45,
+        25,
+        240,
+        246,
+        60,
+        226,
+        37,
+        100,
+        115,
+        111,
+        108,
+        99,
+        67,
+        0,
+        8,
+        18,
+        0,
+        51,
+    ];
+    ///The deployed bytecode of the contract.
+    pub static REVERT_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __DEPLOYED_BYTECODE,
+    );
     pub struct Revert<M>(::ethers::contract::Contract<M>);
-    impl<M> Clone for Revert<M> {
+    impl<M> ::core::clone::Clone for Revert<M> {
         fn clone(&self) -> Self {
-            Revert(self.0.clone())
+            Self(::core::clone::Clone::clone(&self.0))
         }
     }
-    impl<M> std::ops::Deref for Revert<M> {
+    impl<M> ::core::ops::Deref for Revert<M> {
         type Target = ::ethers::contract::Contract<M>;
         fn deref(&self) -> &Self::Target {
             &self.0
         }
     }
-    impl<M> std::fmt::Debug for Revert<M> {
-        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    impl<M> ::core::ops::DerefMut for Revert<M> {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            &mut self.0
+        }
+    }
+    impl<M> ::core::fmt::Debug for Revert<M> {
+        fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             f.debug_tuple(stringify!(Revert)).field(&self.address()).finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> Revert<M> {
-        /// Creates a new contract instance with the specified `ethers`
-        /// client at the given `Address`. The contract derefs to a `ethers::Contract`
-        /// object
+        /// Creates a new contract instance with the specified `ethers` client at
+        /// `address`. The contract derefs to a `ethers::Contract` object.
         pub fn new<T: Into<::ethers::core::types::Address>>(
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            ::ethers::contract::Contract::new(address.into(), REVERT_ABI.clone(), client)
-                .into()
+            Self(
+                ::ethers::contract::Contract::new(
+                    address.into(),
+                    REVERT_ABI.clone(),
+                    client,
+                ),
+            )
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
         ///
         /// Notes:
-        /// 1. If there are no constructor arguments, you should pass `()` as the argument.
-        /// 1. The default poll duration is 7 seconds.
-        /// 1. The default number of confirmations is 1 block.
+        /// - If there are no constructor arguments, you should pass `()` as the argument.
+        /// - The default poll duration is 7 seconds.
+        /// - The default number of confirmations is 1 block.
         ///
         ///
         /// # Example
@@ -73,7 +445,7 @@ pub mod revert {
         ///
         /// ```ignore
         /// # async fn deploy<M: ethers::providers::Middleware>(client: ::std::sync::Arc<M>) {
-        ///     abigen!(Greeter,"../greeter.json");
+        ///     abigen!(Greeter, "../greeter.json");
         ///
         ///    let greeter_contract = Greeter::deploy(client, "Hello world!".to_string()).unwrap().send().await.unwrap();
         ///    let msg = greeter_contract.greet().call().await.unwrap();
@@ -82,7 +454,7 @@ pub mod revert {
         pub fn deploy<T: ::ethers::core::abi::Tokenize>(
             client: ::std::sync::Arc<M>,
             constructor_args: T,
-        ) -> ::std::result::Result<
+        ) -> ::core::result::Result<
             ::ethers::contract::builders::ContractDeployer<M, Self>,
             ::ethers::contract::ContractError<M>,
         > {
@@ -105,19 +477,20 @@ pub mod revert {
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
     for Revert<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
-            Self(contract)
+            Self::new(contract.address(), contract.client())
         }
     }
     ///Container type for all input parameters for the `fail` function with signature `fail()` and selector `0xa9cc4718`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthCall,
         ::ethers::contract::EthDisplay,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     #[ethcall(name = "fail", abi = "fail()")]
     pub struct FailCall;
 }

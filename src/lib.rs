@@ -1,6 +1,6 @@
 pub mod bindings;
-mod calls;
-mod cmds;
+pub mod calls;
+pub mod cmds;
 mod error;
 mod planner;
 

@@ -1,53 +1,56 @@
 pub use ierc20::*;
-#[allow(clippy::too_many_arguments, non_camel_case_types)]
+/// This module was auto-generated with ethers-rs Abigen.
+/// More information at: <https://github.com/gakonst/ethers-rs>
+#[allow(
+    clippy::enum_variant_names,
+    clippy::too_many_arguments,
+    clippy::upper_case_acronyms,
+    clippy::type_complexity,
+    dead_code,
+    non_camel_case_types,
+)]
 pub mod ierc20 {
-    #![allow(clippy::enum_variant_names)]
-    #![allow(dead_code)]
-    #![allow(clippy::type_complexity)]
-    #![allow(unused_imports)]
-    ///IERC20 was auto-generated with ethers-rs Abigen. More information at: https://github.com/gakonst/ethers-rs
-    use std::sync::Arc;
-    use ::ethers::core::{
-        abi::{Abi, Token, Detokenize, InvalidOutputType, Tokenizable},
-        types::*,
-    };
-    use ::ethers::contract::{
-        Contract, builders::{ContractCall, Event},
-        Lazy,
-    };
-    use ::ethers::providers::Middleware;
     #[rustfmt::skip]
-    const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"Approval\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"Transfer\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"allowance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"approve\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"transfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"transferFrom\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\",\"components\":[]}]}]";
-    /// The parsed JSON-ABI of the contract.
+    const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"Approval\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"Transfer\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"allowance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"approve\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"transfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"transferFrom\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\",\"components\":[]}]}]";
+    ///The parsed JSON ABI of the contract.
     pub static IERC20_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("invalid abi"));
+    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
     pub struct IERC20<M>(::ethers::contract::Contract<M>);
-    impl<M> Clone for IERC20<M> {
+    impl<M> ::core::clone::Clone for IERC20<M> {
         fn clone(&self) -> Self {
-            IERC20(self.0.clone())
+            Self(::core::clone::Clone::clone(&self.0))
         }
     }
-    impl<M> std::ops::Deref for IERC20<M> {
+    impl<M> ::core::ops::Deref for IERC20<M> {
         type Target = ::ethers::contract::Contract<M>;
         fn deref(&self) -> &Self::Target {
             &self.0
         }
     }
-    impl<M> std::fmt::Debug for IERC20<M> {
-        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    impl<M> ::core::ops::DerefMut for IERC20<M> {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            &mut self.0
+        }
+    }
+    impl<M> ::core::fmt::Debug for IERC20<M> {
+        fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             f.debug_tuple(stringify!(IERC20)).field(&self.address()).finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> IERC20<M> {
-        /// Creates a new contract instance with the specified `ethers`
-        /// client at the given `Address`. The contract derefs to a `ethers::Contract`
-        /// object
+        /// Creates a new contract instance with the specified `ethers` client at
+        /// `address`. The contract derefs to a `ethers::Contract` object.
         pub fn new<T: Into<::ethers::core::types::Address>>(
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            ::ethers::contract::Contract::new(address.into(), IERC20_ABI.clone(), client)
-                .into()
+            Self(
+                ::ethers::contract::Contract::new(
+                    address.into(),
+                    IERC20_ABI.clone(),
+                    client,
+                ),
+            )
         }
         ///Calls the contract's `allowance` (0xdd62ed3e) function
         pub fn allowance(
@@ -89,56 +92,67 @@ pub mod ierc20 {
         ///Calls the contract's `transfer` (0xa9059cbb) function
         pub fn transfer(
             &self,
-            recipient: ::ethers::core::types::Address,
+            to: ::ethers::core::types::Address,
             amount: ::ethers::core::types::U256,
         ) -> ::ethers::contract::builders::ContractCall<M, bool> {
             self.0
-                .method_hash([169, 5, 156, 187], (recipient, amount))
+                .method_hash([169, 5, 156, 187], (to, amount))
                 .expect("method not found (this should never happen)")
         }
         ///Calls the contract's `transferFrom` (0x23b872dd) function
         pub fn transfer_from(
             &self,
-            sender: ::ethers::core::types::Address,
-            recipient: ::ethers::core::types::Address,
+            from: ::ethers::core::types::Address,
+            to: ::ethers::core::types::Address,
             amount: ::ethers::core::types::U256,
         ) -> ::ethers::contract::builders::ContractCall<M, bool> {
             self.0
-                .method_hash([35, 184, 114, 221], (sender, recipient, amount))
+                .method_hash([35, 184, 114, 221], (from, to, amount))
                 .expect("method not found (this should never happen)")
         }
         ///Gets the contract's `Approval` event
         pub fn approval_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<M, ApprovalFilter> {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            ApprovalFilter,
+        > {
             self.0.event()
         }
         ///Gets the contract's `Transfer` event
         pub fn transfer_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<M, TransferFilter> {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            TransferFilter,
+        > {
             self.0.event()
         }
-        /// Returns an [`Event`](#ethers_contract::builders::Event) builder for all events of this contract
-        pub fn events(&self) -> ::ethers::contract::builders::Event<M, IERC20Events> {
-            self.0.event_with_filter(Default::default())
+        /// Returns an `Event` builder for all the events of this contract.
+        pub fn events(
+            &self,
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, IERC20Events> {
+            self.0.event_with_filter(::core::default::Default::default())
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
     for IERC20<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
-            Self(contract)
+            Self::new(contract.address(), contract.client())
         }
     }
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthEvent,
         ::ethers::contract::EthDisplay,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     #[ethevent(name = "Approval", abi = "Approval(address,address,uint256)")]
     pub struct ApprovalFilter {
         #[ethevent(indexed)]
@@ -149,13 +163,14 @@ pub mod ierc20 {
     }
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthEvent,
         ::ethers::contract::EthDisplay,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     #[ethevent(name = "Transfer", abi = "Transfer(address,address,uint256)")]
     pub struct TransferFilter {
         #[ethevent(indexed)]
@@ -164,7 +179,8 @@ pub mod ierc20 {
         pub to: ::ethers::core::types::Address,
         pub value: ::ethers::core::types::U256,
     }
-    #[derive(Debug, Clone, PartialEq, Eq, ::ethers::contract::EthAbiType)]
+    ///Container type for all of the contract's events
+    #[derive(Clone, ::ethers::contract::EthAbiType, Debug, PartialEq, Eq, Hash)]
     pub enum IERC20Events {
         ApprovalFilter(ApprovalFilter),
         TransferFilter(TransferFilter),
@@ -172,10 +188,7 @@ pub mod ierc20 {
     impl ::ethers::contract::EthLogDecode for IERC20Events {
         fn decode_log(
             log: &::ethers::core::abi::RawLog,
-        ) -> ::std::result::Result<Self, ::ethers::core::abi::Error>
-        where
-            Self: Sized,
-        {
+        ) -> ::core::result::Result<Self, ::ethers::core::abi::Error> {
             if let Ok(decoded) = ApprovalFilter::decode_log(log) {
                 return Ok(IERC20Events::ApprovalFilter(decoded));
             }
@@ -185,24 +198,35 @@ pub mod ierc20 {
             Err(::ethers::core::abi::Error::InvalidData)
         }
     }
-    impl ::std::fmt::Display for IERC20Events {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+    impl ::core::fmt::Display for IERC20Events {
+        fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                IERC20Events::ApprovalFilter(element) => element.fmt(f),
-                IERC20Events::TransferFilter(element) => element.fmt(f),
+                Self::ApprovalFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::TransferFilter(element) => ::core::fmt::Display::fmt(element, f),
             }
+        }
+    }
+    impl ::core::convert::From<ApprovalFilter> for IERC20Events {
+        fn from(value: ApprovalFilter) -> Self {
+            Self::ApprovalFilter(value)
+        }
+    }
+    impl ::core::convert::From<TransferFilter> for IERC20Events {
+        fn from(value: TransferFilter) -> Self {
+            Self::TransferFilter(value)
         }
     }
     ///Container type for all input parameters for the `allowance` function with signature `allowance(address,address)` and selector `0xdd62ed3e`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthCall,
         ::ethers::contract::EthDisplay,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     #[ethcall(name = "allowance", abi = "allowance(address,address)")]
     pub struct AllowanceCall {
         pub owner: ::ethers::core::types::Address,
@@ -211,13 +235,14 @@ pub mod ierc20 {
     ///Container type for all input parameters for the `approve` function with signature `approve(address,uint256)` and selector `0x095ea7b3`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthCall,
         ::ethers::contract::EthDisplay,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     #[ethcall(name = "approve", abi = "approve(address,uint256)")]
     pub struct ApproveCall {
         pub spender: ::ethers::core::types::Address,
@@ -226,13 +251,14 @@ pub mod ierc20 {
     ///Container type for all input parameters for the `balanceOf` function with signature `balanceOf(address)` and selector `0x70a08231`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthCall,
         ::ethers::contract::EthDisplay,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     #[ethcall(name = "balanceOf", abi = "balanceOf(address)")]
     pub struct BalanceOfCall {
         pub account: ::ethers::core::types::Address,
@@ -240,47 +266,51 @@ pub mod ierc20 {
     ///Container type for all input parameters for the `totalSupply` function with signature `totalSupply()` and selector `0x18160ddd`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthCall,
         ::ethers::contract::EthDisplay,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     #[ethcall(name = "totalSupply", abi = "totalSupply()")]
     pub struct TotalSupplyCall;
     ///Container type for all input parameters for the `transfer` function with signature `transfer(address,uint256)` and selector `0xa9059cbb`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthCall,
         ::ethers::contract::EthDisplay,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     #[ethcall(name = "transfer", abi = "transfer(address,uint256)")]
     pub struct TransferCall {
-        pub recipient: ::ethers::core::types::Address,
+        pub to: ::ethers::core::types::Address,
         pub amount: ::ethers::core::types::U256,
     }
     ///Container type for all input parameters for the `transferFrom` function with signature `transferFrom(address,address,uint256)` and selector `0x23b872dd`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthCall,
         ::ethers::contract::EthDisplay,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     #[ethcall(name = "transferFrom", abi = "transferFrom(address,address,uint256)")]
     pub struct TransferFromCall {
-        pub sender: ::ethers::core::types::Address,
-        pub recipient: ::ethers::core::types::Address,
+        pub from: ::ethers::core::types::Address,
+        pub to: ::ethers::core::types::Address,
         pub amount: ::ethers::core::types::U256,
     }
-    #[derive(Debug, Clone, PartialEq, Eq, ::ethers::contract::EthAbiType)]
+    ///Container type for all of the contract's call
+    #[derive(Clone, ::ethers::contract::EthAbiType, Debug, PartialEq, Eq, Hash)]
     pub enum IERC20Calls {
         Allowance(AllowanceCall),
         Approve(ApproveCall),
@@ -292,42 +322,31 @@ pub mod ierc20 {
     impl ::ethers::core::abi::AbiDecode for IERC20Calls {
         fn decode(
             data: impl AsRef<[u8]>,
-        ) -> ::std::result::Result<Self, ::ethers::core::abi::AbiError> {
+        ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
+            let data = data.as_ref();
             if let Ok(decoded)
-                = <AllowanceCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data.as_ref(),
-                ) {
-                return Ok(IERC20Calls::Allowance(decoded));
+                = <AllowanceCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+                return Ok(Self::Allowance(decoded));
             }
             if let Ok(decoded)
-                = <ApproveCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data.as_ref(),
-                ) {
-                return Ok(IERC20Calls::Approve(decoded));
+                = <ApproveCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+                return Ok(Self::Approve(decoded));
             }
             if let Ok(decoded)
-                = <BalanceOfCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data.as_ref(),
-                ) {
-                return Ok(IERC20Calls::BalanceOf(decoded));
+                = <BalanceOfCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+                return Ok(Self::BalanceOf(decoded));
             }
             if let Ok(decoded)
-                = <TotalSupplyCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data.as_ref(),
-                ) {
-                return Ok(IERC20Calls::TotalSupply(decoded));
+                = <TotalSupplyCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+                return Ok(Self::TotalSupply(decoded));
             }
             if let Ok(decoded)
-                = <TransferCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data.as_ref(),
-                ) {
-                return Ok(IERC20Calls::Transfer(decoded));
+                = <TransferCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+                return Ok(Self::Transfer(decoded));
             }
             if let Ok(decoded)
-                = <TransferFromCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data.as_ref(),
-                ) {
-                return Ok(IERC20Calls::TransferFrom(decoded));
+                = <TransferFromCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+                return Ok(Self::TransferFrom(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
         }
@@ -335,121 +354,137 @@ pub mod ierc20 {
     impl ::ethers::core::abi::AbiEncode for IERC20Calls {
         fn encode(self) -> Vec<u8> {
             match self {
-                IERC20Calls::Allowance(element) => element.encode(),
-                IERC20Calls::Approve(element) => element.encode(),
-                IERC20Calls::BalanceOf(element) => element.encode(),
-                IERC20Calls::TotalSupply(element) => element.encode(),
-                IERC20Calls::Transfer(element) => element.encode(),
-                IERC20Calls::TransferFrom(element) => element.encode(),
+                Self::Allowance(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::Approve(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::BalanceOf(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::TotalSupply(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::Transfer(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::TransferFrom(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
             }
         }
     }
-    impl ::std::fmt::Display for IERC20Calls {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+    impl ::core::fmt::Display for IERC20Calls {
+        fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                IERC20Calls::Allowance(element) => element.fmt(f),
-                IERC20Calls::Approve(element) => element.fmt(f),
-                IERC20Calls::BalanceOf(element) => element.fmt(f),
-                IERC20Calls::TotalSupply(element) => element.fmt(f),
-                IERC20Calls::Transfer(element) => element.fmt(f),
-                IERC20Calls::TransferFrom(element) => element.fmt(f),
+                Self::Allowance(element) => ::core::fmt::Display::fmt(element, f),
+                Self::Approve(element) => ::core::fmt::Display::fmt(element, f),
+                Self::BalanceOf(element) => ::core::fmt::Display::fmt(element, f),
+                Self::TotalSupply(element) => ::core::fmt::Display::fmt(element, f),
+                Self::Transfer(element) => ::core::fmt::Display::fmt(element, f),
+                Self::TransferFrom(element) => ::core::fmt::Display::fmt(element, f),
             }
         }
     }
-    impl ::std::convert::From<AllowanceCall> for IERC20Calls {
-        fn from(var: AllowanceCall) -> Self {
-            IERC20Calls::Allowance(var)
+    impl ::core::convert::From<AllowanceCall> for IERC20Calls {
+        fn from(value: AllowanceCall) -> Self {
+            Self::Allowance(value)
         }
     }
-    impl ::std::convert::From<ApproveCall> for IERC20Calls {
-        fn from(var: ApproveCall) -> Self {
-            IERC20Calls::Approve(var)
+    impl ::core::convert::From<ApproveCall> for IERC20Calls {
+        fn from(value: ApproveCall) -> Self {
+            Self::Approve(value)
         }
     }
-    impl ::std::convert::From<BalanceOfCall> for IERC20Calls {
-        fn from(var: BalanceOfCall) -> Self {
-            IERC20Calls::BalanceOf(var)
+    impl ::core::convert::From<BalanceOfCall> for IERC20Calls {
+        fn from(value: BalanceOfCall) -> Self {
+            Self::BalanceOf(value)
         }
     }
-    impl ::std::convert::From<TotalSupplyCall> for IERC20Calls {
-        fn from(var: TotalSupplyCall) -> Self {
-            IERC20Calls::TotalSupply(var)
+    impl ::core::convert::From<TotalSupplyCall> for IERC20Calls {
+        fn from(value: TotalSupplyCall) -> Self {
+            Self::TotalSupply(value)
         }
     }
-    impl ::std::convert::From<TransferCall> for IERC20Calls {
-        fn from(var: TransferCall) -> Self {
-            IERC20Calls::Transfer(var)
+    impl ::core::convert::From<TransferCall> for IERC20Calls {
+        fn from(value: TransferCall) -> Self {
+            Self::Transfer(value)
         }
     }
-    impl ::std::convert::From<TransferFromCall> for IERC20Calls {
-        fn from(var: TransferFromCall) -> Self {
-            IERC20Calls::TransferFrom(var)
+    impl ::core::convert::From<TransferFromCall> for IERC20Calls {
+        fn from(value: TransferFromCall) -> Self {
+            Self::TransferFrom(value)
         }
     }
     ///Container type for all return fields from the `allowance` function with signature `allowance(address,address)` and selector `0xdd62ed3e`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthAbiType,
         ::ethers::contract::EthAbiCodec,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     pub struct AllowanceReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `approve` function with signature `approve(address,uint256)` and selector `0x095ea7b3`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthAbiType,
         ::ethers::contract::EthAbiCodec,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     pub struct ApproveReturn(pub bool);
     ///Container type for all return fields from the `balanceOf` function with signature `balanceOf(address)` and selector `0x70a08231`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthAbiType,
         ::ethers::contract::EthAbiCodec,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     pub struct BalanceOfReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `totalSupply` function with signature `totalSupply()` and selector `0x18160ddd`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthAbiType,
         ::ethers::contract::EthAbiCodec,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     pub struct TotalSupplyReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `transfer` function with signature `transfer(address,uint256)` and selector `0xa9059cbb`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthAbiType,
         ::ethers::contract::EthAbiCodec,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     pub struct TransferReturn(pub bool);
     ///Container type for all return fields from the `transferFrom` function with signature `transferFrom(address,address,uint256)` and selector `0x23b872dd`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthAbiType,
         ::ethers::contract::EthAbiCodec,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     pub struct TransferFromReturn(pub bool);
 }

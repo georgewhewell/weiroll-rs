@@ -2,7 +2,7 @@ use crate::calls::FunctionCall;
 use crate::Planner;
 use bitflags::bitflags;
 use ethers::abi::{AbiEncode, Tokenizable};
-use ethers::prelude::*;
+use ethers::prelude::Bytes;
 use slotmap::DefaultKey;
 use std::fmt::Debug;
 use std::hash::Hash;
@@ -27,7 +27,7 @@ bitflags! {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum CommandType {
     Call,
     RawCall,
@@ -60,6 +60,11 @@ impl Literal {
     pub fn bytes(&self) -> Bytes {
         self.bytes.clone()
     }
+
+    pub fn new(dynamic: bool,
+        bytes: Bytes) -> Self {
+        Literal { dynamic, bytes}
+    }
 }
 
 impl Hash for Literal {
@@ -68,7 +73,7 @@ impl Hash for Literal {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Value {
     Literal(Literal),
     Return(ReturnValue),
@@ -93,7 +98,7 @@ impl Value {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Command {
     pub(crate) call: FunctionCall,
     pub(crate) kind: CommandType,
