@@ -650,7 +650,7 @@ mod tests {
             )
             .expect("can add call");
         planner
-            .call(addr(),StrcatCall::selector(),  vec![ret.into()], ParamType::Uint(256))
+            .call(addr(),StrlenCall::selector(),  vec![ret.into()], ParamType::Uint(256))
             .expect("can add call with return val");
         let (commands, state) = planner.plan().expect("plan");
         assert_eq!(commands.len(), 2);
@@ -674,8 +674,13 @@ mod tests {
     #[test]
     fn test_planner_argument_count_mismatch() {
         let mut planner = Planner::default();
-        let ret = planner.call(addr(), StrcatCall::selector(), vec![U256::from(1).into()], ParamType::Uint(256));
-        assert_eq!(ret.err(), Some(WeirollError::ArgumentCountMismatch));
+        let ret = planner.add_subplan(
+            addr(),
+            AddCall::selector(),
+            vec![U256::from(1).into()],
+            ParamType::Uint(256),
+        );
+        assert_eq!(ret.err(), Some(WeirollError::MissingStateOrSubplan));
     }
 
     #[test]
@@ -699,14 +704,16 @@ mod tests {
         subplanner
             .call(
                 addr(),
+                AddCall::selector(),
                 vec![U256::from(1).into(), U256::from(2).into()],
                 ParamType::Uint(256),
             )
             .expect("can add call");
         let mut planner = Planner::default();
         let ret = planner
-            .add_subplan::<subplan_contract::ExecuteCall>(
+            .add_subplan(
                 addr(),
+                subplan_contract::ExecuteCall::selector(),
                 vec![Value::Subplan(subplanner), Value::State(Default::default())],
                 ParamType::Array(Box::new(ParamType::Bytes)),
             )
@@ -756,14 +763,16 @@ mod tests {
         let sum = subplanner
             .call(
                 addr(),
+                AddCall::selector(),
                 vec![U256::from(1).into(), U256::from(2).into()],
                 ParamType::Uint(256),
             )
             .expect("can add call");
         let mut planner = Planner::default();
         planner
-            .add_subplan::<subplan_contract::ExecuteCall>(
+            .add_subplan(
                 addr(),
+                subplan_contract::ExecuteCall::selector(),
                 vec![Value::Subplan(subplanner), Value::State(Default::default())],
                 ParamType::Array(Box::new(ParamType::Bytes)),
             )
@@ -771,6 +780,7 @@ mod tests {
         planner
             .call(
                 addr(),
+                AddCall::selector(),
                 vec![sum.into(), U256::from(3).into()],
                 ParamType::Uint(256),
             )
