@@ -7,7 +7,9 @@ edition = "2021"
 
 [dependencies]
 bitflags = "1"
-ethers = "*"
+ethers = { git = "https://github.com/gakonst/ethers-rs", default-features = false, features = [
+    "abigen",
+] }
 slotmap = "*"
 thiserror = "*"
 tracing = "*"

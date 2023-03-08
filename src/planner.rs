@@ -414,7 +414,6 @@ impl Planner {
             literal_slot_map.insert(literal, slot.into());
         }
 
-        println!("state len is: {}", state.len());
         let mut ps = PlannerState {
             return_slot_map: Default::default(),
             literal_slot_map,
