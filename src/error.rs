@@ -32,4 +32,10 @@ pub enum WeirollError {
 
     #[error("Subplans must take planner and state arguments")]
     MissingStateOrSubplan,
+
+    #[error("integer overflow")]
+    InternalOverflow(#[from] std::num::TryFromIntError),
+
+    #[error("command not visible here")]
+    CommandNotVisible,
 }
