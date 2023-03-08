@@ -1,68 +1,343 @@
 pub use sender::*;
-#[allow(clippy::too_many_arguments, non_camel_case_types)]
+/// This module was auto-generated with ethers-rs Abigen.
+/// More information at: <https://github.com/gakonst/ethers-rs>
+#[allow(
+    clippy::enum_variant_names,
+    clippy::too_many_arguments,
+    clippy::upper_case_acronyms,
+    clippy::type_complexity,
+    dead_code,
+    non_camel_case_types,
+)]
 pub mod sender {
-    #![allow(clippy::enum_variant_names)]
-    #![allow(dead_code)]
-    #![allow(clippy::type_complexity)]
-    #![allow(unused_imports)]
-    ///Sender was auto-generated with ethers-rs Abigen. More information at: https://github.com/gakonst/ethers-rs
-    use std::sync::Arc;
-    use ::ethers::core::{
-        abi::{Abi, Token, Detokenize, InvalidOutputType, Tokenizable},
-        types::*,
-    };
-    use ::ethers::contract::{
-        Contract, builders::{ContractCall, Event},
-        Lazy,
-    };
-    use ::ethers::providers::Middleware;
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"sender\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]}]";
-    /// The parsed JSON-ABI of the contract.
+    ///The parsed JSON ABI of the contract.
     pub static SENDER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("invalid abi"));
-    /// Bytecode of the #name contract
-    pub static SENDER_BYTECODE: ::ethers::contract::Lazy<::ethers::core::types::Bytes> = ::ethers::contract::Lazy::new(||
-    {
-        "0x6080604052348015600f57600080fd5b50607680601d6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c806367e404ce14602d575b600080fd5b6040805133815290519081900360200190f3fea26469706673582212200b4576842516a2756d8838b653c0c9baef5bb2f6c755ece4bf70c463b5c899f864736f6c63430008110033"
-            .parse()
-            .expect("invalid bytecode")
-    });
+    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    #[rustfmt::skip]
+    const __BYTECODE: &[u8] = &[
+        96,
+        128,
+        96,
+        64,
+        82,
+        52,
+        128,
+        21,
+        96,
+        15,
+        87,
+        96,
+        0,
+        128,
+        253,
+        91,
+        80,
+        96,
+        118,
+        128,
+        96,
+        29,
+        96,
+        0,
+        57,
+        96,
+        0,
+        243,
+        254,
+        96,
+        128,
+        96,
+        64,
+        82,
+        52,
+        128,
+        21,
+        96,
+        15,
+        87,
+        96,
+        0,
+        128,
+        253,
+        91,
+        80,
+        96,
+        4,
+        54,
+        16,
+        96,
+        40,
+        87,
+        96,
+        0,
+        53,
+        96,
+        224,
+        28,
+        128,
+        99,
+        103,
+        228,
+        4,
+        206,
+        20,
+        96,
+        45,
+        87,
+        91,
+        96,
+        0,
+        128,
+        253,
+        91,
+        96,
+        64,
+        128,
+        81,
+        51,
+        129,
+        82,
+        144,
+        81,
+        144,
+        129,
+        144,
+        3,
+        96,
+        32,
+        1,
+        144,
+        243,
+        254,
+        162,
+        100,
+        105,
+        112,
+        102,
+        115,
+        88,
+        34,
+        18,
+        32,
+        11,
+        69,
+        118,
+        132,
+        37,
+        22,
+        162,
+        117,
+        109,
+        136,
+        56,
+        182,
+        83,
+        192,
+        201,
+        186,
+        239,
+        91,
+        178,
+        246,
+        199,
+        85,
+        236,
+        228,
+        191,
+        112,
+        196,
+        99,
+        181,
+        200,
+        153,
+        248,
+        100,
+        115,
+        111,
+        108,
+        99,
+        67,
+        0,
+        8,
+        17,
+        0,
+        51,
+    ];
+    ///The bytecode of the contract.
+    pub static SENDER_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __BYTECODE,
+    );
+    #[rustfmt::skip]
+    const __DEPLOYED_BYTECODE: &[u8] = &[
+        96,
+        128,
+        96,
+        64,
+        82,
+        52,
+        128,
+        21,
+        96,
+        15,
+        87,
+        96,
+        0,
+        128,
+        253,
+        91,
+        80,
+        96,
+        4,
+        54,
+        16,
+        96,
+        40,
+        87,
+        96,
+        0,
+        53,
+        96,
+        224,
+        28,
+        128,
+        99,
+        103,
+        228,
+        4,
+        206,
+        20,
+        96,
+        45,
+        87,
+        91,
+        96,
+        0,
+        128,
+        253,
+        91,
+        96,
+        64,
+        128,
+        81,
+        51,
+        129,
+        82,
+        144,
+        81,
+        144,
+        129,
+        144,
+        3,
+        96,
+        32,
+        1,
+        144,
+        243,
+        254,
+        162,
+        100,
+        105,
+        112,
+        102,
+        115,
+        88,
+        34,
+        18,
+        32,
+        11,
+        69,
+        118,
+        132,
+        37,
+        22,
+        162,
+        117,
+        109,
+        136,
+        56,
+        182,
+        83,
+        192,
+        201,
+        186,
+        239,
+        91,
+        178,
+        246,
+        199,
+        85,
+        236,
+        228,
+        191,
+        112,
+        196,
+        99,
+        181,
+        200,
+        153,
+        248,
+        100,
+        115,
+        111,
+        108,
+        99,
+        67,
+        0,
+        8,
+        17,
+        0,
+        51,
+    ];
+    ///The deployed bytecode of the contract.
+    pub static SENDER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __DEPLOYED_BYTECODE,
+    );
     pub struct Sender<M>(::ethers::contract::Contract<M>);
-    impl<M> Clone for Sender<M> {
+    impl<M> ::core::clone::Clone for Sender<M> {
         fn clone(&self) -> Self {
-            Sender(self.0.clone())
+            Self(::core::clone::Clone::clone(&self.0))
         }
     }
-    impl<M> std::ops::Deref for Sender<M> {
+    impl<M> ::core::ops::Deref for Sender<M> {
         type Target = ::ethers::contract::Contract<M>;
         fn deref(&self) -> &Self::Target {
             &self.0
         }
     }
-    impl<M> std::fmt::Debug for Sender<M> {
-        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    impl<M> ::core::ops::DerefMut for Sender<M> {
+        fn deref_mut(&mut self) -> &mut Self::Target {
+            &mut self.0
+        }
+    }
+    impl<M> ::core::fmt::Debug for Sender<M> {
+        fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             f.debug_tuple(stringify!(Sender)).field(&self.address()).finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> Sender<M> {
-        /// Creates a new contract instance with the specified `ethers`
-        /// client at the given `Address`. The contract derefs to a `ethers::Contract`
-        /// object
+        /// Creates a new contract instance with the specified `ethers` client at
+        /// `address`. The contract derefs to a `ethers::Contract` object.
         pub fn new<T: Into<::ethers::core::types::Address>>(
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            ::ethers::contract::Contract::new(address.into(), SENDER_ABI.clone(), client)
-                .into()
+            Self(
+                ::ethers::contract::Contract::new(
+                    address.into(),
+                    SENDER_ABI.clone(),
+                    client,
+                ),
+            )
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
         ///
         /// Notes:
-        /// 1. If there are no constructor arguments, you should pass `()` as the argument.
-        /// 1. The default poll duration is 7 seconds.
-        /// 1. The default number of confirmations is 1 block.
+        /// - If there are no constructor arguments, you should pass `()` as the argument.
+        /// - The default poll duration is 7 seconds.
+        /// - The default number of confirmations is 1 block.
         ///
         ///
         /// # Example
@@ -73,7 +348,7 @@ pub mod sender {
         ///
         /// ```ignore
         /// # async fn deploy<M: ethers::providers::Middleware>(client: ::std::sync::Arc<M>) {
-        ///     abigen!(Greeter,"../greeter.json");
+        ///     abigen!(Greeter, "../greeter.json");
         ///
         ///    let greeter_contract = Greeter::deploy(client, "Hello world!".to_string()).unwrap().send().await.unwrap();
         ///    let msg = greeter_contract.greet().call().await.unwrap();
@@ -82,7 +357,7 @@ pub mod sender {
         pub fn deploy<T: ::ethers::core::abi::Tokenize>(
             client: ::std::sync::Arc<M>,
             constructor_args: T,
-        ) -> ::std::result::Result<
+        ) -> ::core::result::Result<
             ::ethers::contract::builders::ContractDeployer<M, Self>,
             ::ethers::contract::ContractError<M>,
         > {
@@ -110,30 +385,32 @@ pub mod sender {
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
     for Sender<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
-            Self(contract)
+            Self::new(contract.address(), contract.client())
         }
     }
     ///Container type for all input parameters for the `sender` function with signature `sender()` and selector `0x67e404ce`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthCall,
         ::ethers::contract::EthDisplay,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     #[ethcall(name = "sender", abi = "sender()")]
     pub struct SenderCall;
     ///Container type for all return fields from the `sender` function with signature `sender()` and selector `0x67e404ce`
     #[derive(
         Clone,
-        Debug,
-        Eq,
-        PartialEq,
         ::ethers::contract::EthAbiType,
         ::ethers::contract::EthAbiCodec,
+        Default,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash
     )]
-    #[derive(Default)]
     pub struct SenderReturn(pub ::ethers::core::types::Address);
 }
