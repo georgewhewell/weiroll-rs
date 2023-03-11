@@ -58,7 +58,7 @@ impl Planner {
         let dynamic = return_type.is_dynamic();
         let call = FunctionCall {
             address,
-            flags: CommandFlags::empty(),
+            flags: CommandFlags::CALL,
             value: Some(U256::zero()),
             selector,
             args,
