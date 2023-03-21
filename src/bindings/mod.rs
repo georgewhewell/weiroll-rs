@@ -17,5 +17,7 @@ pub mod multi_return;
 pub mod payable;
 pub mod revert;
 pub mod sender;
+pub mod state_test;
 pub mod strings;
+pub mod testable_vm;
 pub mod vm;
