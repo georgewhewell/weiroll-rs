@@ -12,10 +12,10 @@ include = ["**/*.rs"]
 [dependencies]
 bitflags = "2"
 bytes = "1.4.0"
-ethers = "*"
-slotmap = "*"
-thiserror = "*"
-tracing = "*"
+ethers = "2.0.3"
+slotmap = "1.0.6"
+thiserror = "1.0.40"
+tracing = "0.1.37"
 
 [dev-dependencies]
 tokio = { version = "1.21", features = ["macros"] }
