@@ -2,11 +2,15 @@
 name = "weiroll"
 version = "0.1.0"
 edition = "2021"
+description = "Weiroll planner for EVM using ethers-rs"
+repository = "https://github.com/georgewhewell/weiroll-rs"
+license = "MIT OR Apache-2.0"
+include = ["**/*.rs"]
 
 [lib]
 
 [dependencies]
-bitflags = "1"
+bitflags = "2"
 bytes = "1.4.0"
 ethers = "*"
 slotmap = "*"

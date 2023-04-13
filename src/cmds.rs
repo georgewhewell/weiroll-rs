@@ -8,6 +8,7 @@ use std::fmt::Debug;
 use std::hash::Hash;
 
 bitflags! {
+    #[derive(Debug, PartialEq, Clone, Copy)]
     #[repr(transparent)]
     pub struct CommandFlags: u8 {
         // Specifies that a call should be made using the DELEGATECALL opcode
