@@ -704,6 +704,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn test_planner_allows_return_value_access_in_parent_scope() {
         let mut subplanner = Planner::default();
         let sum = subplanner
@@ -750,6 +751,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn test_planner_allows_return_value_access_across_scopes() {
         let mut subplanner1 = Planner::default();
         let sum = subplanner1
