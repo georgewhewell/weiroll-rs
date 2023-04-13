@@ -7,14 +7,16 @@ pub use strings::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod strings {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"a\",\"type\":\"string\",\"components\":[]},{\"internalType\":\"string\",\"name\":\"b\",\"type\":\"string\",\"components\":[]}],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"strcat\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"x\",\"type\":\"string\",\"components\":[]}],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"strlen\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static STRINGS_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static STRINGS_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -643,9 +645,8 @@ pub mod strings {
         51,
     ];
     ///The bytecode of the contract.
-    pub static STRINGS_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static STRINGS_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -1242,9 +1243,8 @@ pub mod strings {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static STRINGS_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static STRINGS_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct Strings<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for Strings<M> {
         fn clone(&self) -> Self {
@@ -1264,7 +1264,9 @@ pub mod strings {
     }
     impl<M> ::core::fmt::Debug for Strings<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(Strings)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(Strings))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> Strings<M> {
@@ -1274,13 +1276,11 @@ pub mod strings {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    STRINGS_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                STRINGS_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -1341,8 +1341,7 @@ pub mod strings {
                 .expect("method not found (this should never happen)")
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for Strings<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for Strings<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -1356,7 +1355,7 @@ pub mod strings {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "strcat", abi = "strcat(string,string)")]
     pub struct StrcatCall {
@@ -1372,7 +1371,7 @@ pub mod strings {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "strlen", abi = "strlen(string)")]
     pub struct StrlenCall {
@@ -1389,12 +1388,10 @@ pub mod strings {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <StrcatCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <StrcatCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Strcat(decoded));
             }
-            if let Ok(decoded)
-                = <StrlenCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <StrlenCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Strlen(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -1435,7 +1432,7 @@ pub mod strings {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct StrcatReturn(pub ::std::string::String);
     ///Container type for all return fields from the `strlen` function with signature `strlen(string)` and selector `0x367bbd78`
@@ -1447,7 +1444,7 @@ pub mod strings {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct StrlenReturn(pub ::ethers::core::types::U256);
 }

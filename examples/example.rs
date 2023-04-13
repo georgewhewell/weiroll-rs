@@ -50,7 +50,7 @@ pub async fn main() {
         .unwrap();
     let balance = planner
         .call::<BalanceOfCall>(
-            WETH_ADDR.parse::<Address>().unwrap().into(),
+            WETH_ADDR.parse::<Address>().unwrap(),
             vec![VIT_ADDR.parse::<Address>().unwrap().into()],
             ParamType::Uint(256),
         )

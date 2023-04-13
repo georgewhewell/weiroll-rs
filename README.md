@@ -24,7 +24,7 @@ cargo add weiroll
 
 ### Usage
 
-Check `examples/example.rs` or tests in `lib/planner.rs`
+Check [examples/example.rs](https://github.com/georgewhewell/weiroll-rs/blob/main/examples/example.rs) or tests in [lib/planner.rs](https://github.com/georgewhewell/weiroll-rs/blob/main/src/planner.rs#L445)
 
 ## License
 
