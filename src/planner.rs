@@ -793,6 +793,6 @@ mod tests {
             )
             .expect("can add subplan");
 
-        let (commands, state) = planner.plan().expect("plan");
+        let (_commands, _state) = planner.plan().expect("plan");
     }
 }
