@@ -13,17 +13,20 @@ pub struct FunctionCall<'a> {
 }
 
 impl FunctionCall<'_> {
+    #[allow(dead_code)]
     pub fn with_value(mut self, value: U256) -> Self {
         self.flags = (self.flags & !CommandFlags::CALLTYPE_MASK) | CommandFlags::CALL_WITH_VALUE;
         self.value = Some(value);
         self
     }
 
+    #[allow(dead_code)]
     pub fn raw_value(mut self) -> Self {
         self.flags |= CommandFlags::TUPLE_RETURN;
         self
     }
 
+    #[allow(dead_code)]
     pub fn static_call(mut self) -> Self {
         if (self.flags & CommandFlags::CALLTYPE_MASK) != CommandFlags::CALL {
             panic!("Only CALL operations can be made static");

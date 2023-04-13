@@ -690,37 +690,17 @@ mod tests {
             commands[0],
             "0xde792d5f0082fefffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
         assert_eq!(state.len(), 3);
         assert_eq!(state[0], U256::from(1).encode());
         assert_eq!(state[1], U256::from(2).encode());
-
-        // not sure what we are checking here
-        let subcommands_bytes = concat_bytes(&vec![
-            "0x0000000000000000000000000000000000000000000000000000000000000020"
-                .parse()
-                .unwrap(),
-            state[2].clone(),
-        ]);
-
-        // let decoded = Vec::<Bytes>::decode(subcommands_bytes).unwrap();
-        println!("state: {:?}", state);
         assert_eq!(
-            state[2].clone(),
+            state[2],
             "0x771602f7000001ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
                 .unwrap()
         );
-        // let subcommands = &Vec::<Bytes>::decode(subcommands_bytes).unwrap()[0];
-        // let decoded: Vec<Vec<u8>> = Vec::<Vec<u8>>::decode(subcommands_bytes).unwrap();
-        // assert_eq!(decoded.len(), 1);
-        // assert_eq!(
-        //     Bytes::from(decoded[0].clone()),
-        //     "0x771602f7000001ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-        //         .parse::<Bytes>()
-        //         .unwrap()
-        // );
     }
 
     #[test]
