@@ -7,14 +7,16 @@ pub use math::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod math {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"a\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"b\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"add\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"a\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"b\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"mul\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"a\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"b\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"sub\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint256[]\",\"name\":\"values\",\"type\":\"uint256[]\",\"components\":[]}],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"sum\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"ret\",\"type\":\"uint256\",\"components\":[]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static MATH_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static MATH_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -681,9 +683,8 @@ pub mod math {
         51,
     ];
     ///The bytecode of the contract.
-    pub static MATH_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static MATH_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -1318,9 +1319,8 @@ pub mod math {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static MATH_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static MATH_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct Math<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for Math<M> {
         fn clone(&self) -> Self {
@@ -1340,7 +1340,9 @@ pub mod math {
     }
     impl<M> ::core::fmt::Debug for Math<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(Math)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(Math))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> Math<M> {
@@ -1350,13 +1352,11 @@ pub mod math {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    MATH_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                MATH_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -1437,8 +1437,7 @@ pub mod math {
                 .expect("method not found (this should never happen)")
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for Math<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for Math<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -1452,7 +1451,7 @@ pub mod math {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "add", abi = "add(uint256,uint256)")]
     pub struct AddCall {
@@ -1468,7 +1467,7 @@ pub mod math {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "mul", abi = "mul(uint256,uint256)")]
     pub struct MulCall {
@@ -1484,7 +1483,7 @@ pub mod math {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "sub", abi = "sub(uint256,uint256)")]
     pub struct SubCall {
@@ -1500,7 +1499,7 @@ pub mod math {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "sum", abi = "sum(uint256[])")]
     pub struct SumCall {
@@ -1519,20 +1518,16 @@ pub mod math {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <AddCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <AddCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Add(decoded));
             }
-            if let Ok(decoded)
-                = <MulCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <MulCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Mul(decoded));
             }
-            if let Ok(decoded)
-                = <SubCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <SubCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Sub(decoded));
             }
-            if let Ok(decoded)
-                = <SumCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <SumCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Sum(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -1587,7 +1582,7 @@ pub mod math {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct AddReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `mul` function with signature `mul(uint256,uint256)` and selector `0xc8a4ac9c`
@@ -1599,7 +1594,7 @@ pub mod math {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct MulReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `sub` function with signature `sub(uint256,uint256)` and selector `0xb67d77c5`
@@ -1611,7 +1606,7 @@ pub mod math {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SubReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `sum` function with signature `sum(uint256[])` and selector `0x0194db8e`
@@ -1623,7 +1618,7 @@ pub mod math {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SumReturn {
         pub ret: ::ethers::core::types::U256,

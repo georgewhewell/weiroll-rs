@@ -7,14 +7,16 @@ pub use events::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod events {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"message\",\"type\":\"address\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"LogAddress\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"LogBytes\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"message\",\"type\":\"bytes32\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"LogBytes32\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"message\",\"type\":\"string\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"LogString\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"message\",\"type\":\"uint256\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"LogUint\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"message\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"logAddress\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"logBytes\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"message\",\"type\":\"bytes32\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"logBytes32\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"message\",\"type\":\"string\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"logString\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"message\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"logUint\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"message\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"logUintPayable\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static EVENTS_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static EVENTS_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -921,9 +923,8 @@ pub mod events {
         51,
     ];
     ///The bytecode of the contract.
-    pub static EVENTS_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static EVENTS_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -1798,9 +1799,8 @@ pub mod events {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static EVENTS_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static EVENTS_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct Events<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for Events<M> {
         fn clone(&self) -> Self {
@@ -1820,7 +1820,9 @@ pub mod events {
     }
     impl<M> ::core::fmt::Debug for Events<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(Events)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(Events))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> Events<M> {
@@ -1830,13 +1832,11 @@ pub mod events {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    EVENTS_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                EVENTS_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -1934,41 +1934,25 @@ pub mod events {
         ///Gets the contract's `LogAddress` event
         pub fn log_address_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            LogAddressFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, LogAddressFilter> {
             self.0.event()
         }
         ///Gets the contract's `LogBytes` event
         pub fn log_bytes_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            LogBytesFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, LogBytesFilter> {
             self.0.event()
         }
         ///Gets the contract's `LogBytes32` event
         pub fn log_bytes_32_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            LogBytes32Filter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, LogBytes32Filter> {
             self.0.event()
         }
         ///Gets the contract's `LogString` event
         pub fn log_string_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            LogStringFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, LogStringFilter> {
             self.0.event()
         }
         ///Gets the contract's `LogUint` event
@@ -1981,11 +1965,11 @@ pub mod events {
         pub fn events(
             &self,
         ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, EventsEvents> {
-            self.0.event_with_filter(::core::default::Default::default())
+            self.0
+                .event_with_filter(::core::default::Default::default())
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for Events<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for Events<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -1998,7 +1982,7 @@ pub mod events {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "LogAddress", abi = "LogAddress(address)")]
     pub struct LogAddressFilter {
@@ -2012,7 +1996,7 @@ pub mod events {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "LogBytes", abi = "LogBytes(bytes)")]
     pub struct LogBytesFilter {
@@ -2026,7 +2010,7 @@ pub mod events {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "LogBytes32", abi = "LogBytes32(bytes32)")]
     pub struct LogBytes32Filter {
@@ -2040,7 +2024,7 @@ pub mod events {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "LogString", abi = "LogString(string)")]
     pub struct LogStringFilter {
@@ -2054,7 +2038,7 @@ pub mod events {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "LogUint", abi = "LogUint(uint256)")]
     pub struct LogUintFilter {
@@ -2136,7 +2120,7 @@ pub mod events {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "logAddress", abi = "logAddress(address)")]
     pub struct LogAddressCall {
@@ -2151,7 +2135,7 @@ pub mod events {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "logBytes", abi = "logBytes(bytes)")]
     pub struct LogBytesCall {
@@ -2166,7 +2150,7 @@ pub mod events {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "logBytes32", abi = "logBytes32(bytes32)")]
     pub struct LogBytes32Call {
@@ -2181,7 +2165,7 @@ pub mod events {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "logString", abi = "logString(string)")]
     pub struct LogStringCall {
@@ -2196,7 +2180,7 @@ pub mod events {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "logUint", abi = "logUint(uint256)")]
     pub struct LogUintCall {
@@ -2211,7 +2195,7 @@ pub mod events {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "logUintPayable", abi = "logUintPayable(uint256)")]
     pub struct LogUintPayableCall {
@@ -2232,28 +2216,24 @@ pub mod events {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <LogAddressCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <LogAddressCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::LogAddress(decoded));
             }
-            if let Ok(decoded)
-                = <LogBytesCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <LogBytesCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::LogBytes(decoded));
             }
-            if let Ok(decoded)
-                = <LogBytes32Call as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <LogBytes32Call as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::LogBytes32(decoded));
             }
-            if let Ok(decoded)
-                = <LogStringCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <LogStringCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::LogString(decoded));
             }
-            if let Ok(decoded)
-                = <LogUintCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <LogUintCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::LogUint(decoded));
             }
-            if let Ok(decoded)
-                = <LogUintPayableCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <LogUintPayableCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::LogUintPayable(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -2262,22 +2242,12 @@ pub mod events {
     impl ::ethers::core::abi::AbiEncode for EventsCalls {
         fn encode(self) -> Vec<u8> {
             match self {
-                Self::LogAddress(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::LogBytes(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::LogBytes32(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::LogString(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::LogAddress(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::LogBytes(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::LogBytes32(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::LogString(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::LogUint(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::LogUintPayable(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::LogUintPayable(element) => ::ethers::core::abi::AbiEncode::encode(element),
             }
         }
     }

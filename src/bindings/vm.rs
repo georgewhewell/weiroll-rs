@@ -7,14 +7,16 @@ pub use vm::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod vm {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"command_index\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"string\",\"name\":\"message\",\"type\":\"string\",\"components\":[]}],\"type\":\"error\",\"name\":\"ExecutionFailed\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static VM_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static VM_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     pub struct VM<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for VM<M> {
         fn clone(&self) -> Self {
@@ -34,7 +36,9 @@ pub mod vm {
     }
     impl<M> ::core::fmt::Debug for VM<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(VM)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(VM))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> VM<M> {
@@ -44,13 +48,14 @@ pub mod vm {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(address.into(), VM_ABI.clone(), client),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                VM_ABI.clone(),
+                client,
+            ))
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for VM<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for VM<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -64,7 +69,7 @@ pub mod vm {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "ExecutionFailed",

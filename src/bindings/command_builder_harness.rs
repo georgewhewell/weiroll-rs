@@ -7,18 +7,16 @@ pub use command_builder_harness::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod command_builder_harness {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"basecall\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"state\",\"type\":\"bytes[]\",\"components\":[]},{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"indices\",\"type\":\"bytes32\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"testBuildInputs\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"state\",\"type\":\"bytes[]\",\"components\":[]},{\"internalType\":\"bytes4\",\"name\":\"selector\",\"type\":\"bytes4\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"indices\",\"type\":\"bytes32\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"testBuildInputsBaseGas\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"out\",\"type\":\"bytes\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"state\",\"type\":\"bytes[]\",\"components\":[]},{\"internalType\":\"bytes1\",\"name\":\"index\",\"type\":\"bytes1\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"output\",\"type\":\"bytes\",\"components\":[]}],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"testWriteOutputs\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"\",\"type\":\"bytes[]\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"state\",\"type\":\"bytes[]\",\"components\":[]},{\"internalType\":\"bytes1\",\"name\":\"index\",\"type\":\"bytes1\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"output\",\"type\":\"bytes\",\"components\":[]}],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"testWriteOutputsBaseGas\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"\",\"type\":\"bytes[]\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\",\"components\":[]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static COMMANDBUILDERHARNESS_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static COMMANDBUILDERHARNESS_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -2893,9 +2891,8 @@ pub mod command_builder_harness {
         51,
     ];
     ///The bytecode of the contract.
-    pub static COMMANDBUILDERHARNESS_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static COMMANDBUILDERHARNESS_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -5738,9 +5735,8 @@ pub mod command_builder_harness {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static COMMANDBUILDERHARNESS_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static COMMANDBUILDERHARNESS_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct CommandBuilderHarness<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for CommandBuilderHarness<M> {
         fn clone(&self) -> Self {
@@ -5772,13 +5768,11 @@ pub mod command_builder_harness {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    COMMANDBUILDERHARNESS_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                COMMANDBUILDERHARNESS_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -5831,10 +5825,7 @@ pub mod command_builder_harness {
             state: ::std::vec::Vec<::ethers::core::types::Bytes>,
             selector: [u8; 4],
             indices: [u8; 32],
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Bytes,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Bytes> {
             self.0
                 .method_hash([127, 246, 243, 79], (state, selector, indices))
                 .expect("method not found (this should never happen)")
@@ -5845,10 +5836,7 @@ pub mod command_builder_harness {
             state: ::std::vec::Vec<::ethers::core::types::Bytes>,
             selector: [u8; 4],
             indices: [u8; 32],
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Bytes,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Bytes> {
             self.0
                 .method_hash([164, 2, 96, 154], (state, selector, indices))
                 .expect("method not found (this should never happen)")
@@ -5861,7 +5849,10 @@ pub mod command_builder_harness {
             output: ::ethers::core::types::Bytes,
         ) -> ::ethers::contract::builders::ContractCall<
             M,
-            (::std::vec::Vec<::ethers::core::types::Bytes>, ::ethers::core::types::Bytes),
+            (
+                ::std::vec::Vec<::ethers::core::types::Bytes>,
+                ::ethers::core::types::Bytes,
+            ),
         > {
             self.0
                 .method_hash([23, 31, 152, 203], (state, index, output))
@@ -5875,7 +5866,10 @@ pub mod command_builder_harness {
             output: ::ethers::core::types::Bytes,
         ) -> ::ethers::contract::builders::ContractCall<
             M,
-            (::std::vec::Vec<::ethers::core::types::Bytes>, ::ethers::core::types::Bytes),
+            (
+                ::std::vec::Vec<::ethers::core::types::Bytes>,
+                ::ethers::core::types::Bytes,
+            ),
         > {
             self.0
                 .method_hash([127, 24, 3, 33], (state, index, output))
@@ -5883,7 +5877,8 @@ pub mod command_builder_harness {
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for CommandBuilderHarness<M> {
+        for CommandBuilderHarness<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -5897,7 +5892,7 @@ pub mod command_builder_harness {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "basecall", abi = "basecall()")]
     pub struct BasecallCall;
@@ -5910,9 +5905,12 @@ pub mod command_builder_harness {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[ethcall(name = "testBuildInputs", abi = "testBuildInputs(bytes[],bytes4,bytes32)")]
+    #[ethcall(
+        name = "testBuildInputs",
+        abi = "testBuildInputs(bytes[],bytes4,bytes32)"
+    )]
     pub struct TestBuildInputsCall {
         pub state: ::std::vec::Vec<::ethers::core::types::Bytes>,
         pub selector: [u8; 4],
@@ -5927,7 +5925,7 @@ pub mod command_builder_harness {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "testBuildInputsBaseGas",
@@ -5947,9 +5945,12 @@ pub mod command_builder_harness {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[ethcall(name = "testWriteOutputs", abi = "testWriteOutputs(bytes[],bytes1,bytes)")]
+    #[ethcall(
+        name = "testWriteOutputs",
+        abi = "testWriteOutputs(bytes[],bytes1,bytes)"
+    )]
     pub struct TestWriteOutputsCall {
         pub state: ::std::vec::Vec<::ethers::core::types::Bytes>,
         pub index: [u8; 1],
@@ -5964,7 +5965,7 @@ pub mod command_builder_harness {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "testWriteOutputsBaseGas",
@@ -5989,30 +5990,27 @@ pub mod command_builder_harness {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <BasecallCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <BasecallCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Basecall(decoded));
             }
-            if let Ok(decoded)
-                = <TestBuildInputsCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <TestBuildInputsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TestBuildInputs(decoded));
             }
-            if let Ok(decoded)
-                = <TestBuildInputsBaseGasCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <TestBuildInputsBaseGasCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TestBuildInputsBaseGas(decoded));
             }
-            if let Ok(decoded)
-                = <TestWriteOutputsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <TestWriteOutputsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TestWriteOutputs(decoded));
             }
-            if let Ok(decoded)
-                = <TestWriteOutputsBaseGasCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <TestWriteOutputsBaseGasCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TestWriteOutputsBaseGas(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -6021,18 +6019,12 @@ pub mod command_builder_harness {
     impl ::ethers::core::abi::AbiEncode for CommandBuilderHarnessCalls {
         fn encode(self) -> Vec<u8> {
             match self {
-                Self::Basecall(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::TestBuildInputs(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::Basecall(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::TestBuildInputs(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::TestBuildInputsBaseGas(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::TestWriteOutputs(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::TestWriteOutputs(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::TestWriteOutputsBaseGas(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -6044,13 +6036,9 @@ pub mod command_builder_harness {
             match self {
                 Self::Basecall(element) => ::core::fmt::Display::fmt(element, f),
                 Self::TestBuildInputs(element) => ::core::fmt::Display::fmt(element, f),
-                Self::TestBuildInputsBaseGas(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::TestBuildInputsBaseGas(element) => ::core::fmt::Display::fmt(element, f),
                 Self::TestWriteOutputs(element) => ::core::fmt::Display::fmt(element, f),
-                Self::TestWriteOutputsBaseGas(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::TestWriteOutputsBaseGas(element) => ::core::fmt::Display::fmt(element, f),
             }
         }
     }
@@ -6064,8 +6052,7 @@ pub mod command_builder_harness {
             Self::TestBuildInputs(value)
         }
     }
-    impl ::core::convert::From<TestBuildInputsBaseGasCall>
-    for CommandBuilderHarnessCalls {
+    impl ::core::convert::From<TestBuildInputsBaseGasCall> for CommandBuilderHarnessCalls {
         fn from(value: TestBuildInputsBaseGasCall) -> Self {
             Self::TestBuildInputsBaseGas(value)
         }
@@ -6075,8 +6062,7 @@ pub mod command_builder_harness {
             Self::TestWriteOutputs(value)
         }
     }
-    impl ::core::convert::From<TestWriteOutputsBaseGasCall>
-    for CommandBuilderHarnessCalls {
+    impl ::core::convert::From<TestWriteOutputsBaseGasCall> for CommandBuilderHarnessCalls {
         fn from(value: TestWriteOutputsBaseGasCall) -> Self {
             Self::TestWriteOutputsBaseGas(value)
         }
@@ -6090,7 +6076,7 @@ pub mod command_builder_harness {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct TestBuildInputsReturn(pub ::ethers::core::types::Bytes);
     ///Container type for all return fields from the `testBuildInputsBaseGas` function with signature `testBuildInputsBaseGas(bytes[],bytes4,bytes32)` and selector `0xa402609a`
@@ -6102,7 +6088,7 @@ pub mod command_builder_harness {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct TestBuildInputsBaseGasReturn {
         pub out: ::ethers::core::types::Bytes,
@@ -6116,7 +6102,7 @@ pub mod command_builder_harness {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct TestWriteOutputsReturn(
         pub ::std::vec::Vec<::ethers::core::types::Bytes>,
@@ -6131,7 +6117,7 @@ pub mod command_builder_harness {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct TestWriteOutputsBaseGasReturn(
         pub ::std::vec::Vec<::ethers::core::types::Bytes>,
