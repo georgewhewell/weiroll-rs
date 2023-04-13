@@ -16,21 +16,6 @@ const WETH_ADDR: &str = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
 const VIT_ADDR: &str = "0xab5801a7d398351b8be11c439e05c5b3259aec9b";
 const PROVIDER_URL: &str = "http://localhost:8545";
 
-// planner should prob return [u8; 32]
-fn bytes_to_array(bytes: impl Into<Bytes>) -> [u8; 32] {
-    let bytes = bytes.into();
-    let mut array = [0u8; 32];
-    array.copy_from_slice(&bytes[..]);
-    array
-}
-
-fn state_to_array(state: Vec<Bytes>) -> Vec<[u8; 32]> {
-    state
-        .into_iter()
-        .map(|bytes| bytes_to_array(bytes))
-        .collect()
-}
-
 #[tokio::main]
 pub async fn main() {
     println!("Spawning anvil..");
@@ -77,7 +62,7 @@ pub async fn main() {
 
     println!("Executing..");
     let receipt = vm
-        .execute(state_to_array(commands), state)
+        .execute(commands, state)
         .send()
         .await
         .unwrap()

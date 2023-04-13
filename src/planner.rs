@@ -2,6 +2,8 @@ use crate::calls::FunctionCall;
 use crate::cmds::{Command, CommandFlags, CommandType, Literal, ReturnValue, Value};
 use crate::error::WeirollError;
 
+use bytes::BufMut;
+use bytes::BytesMut;
 use ethers::abi::ParamType;
 use ethers::prelude::*;
 use slotmap::{DefaultKey, HopSlotMap};
@@ -171,7 +173,7 @@ impl<'a> Planner<'a> {
         Ok(args)
     }
 
-    fn build_commands(&self, ps: &mut PlannerState) -> Result<Vec<Bytes>, WeirollError> {
+    fn build_commands(&self, ps: &mut PlannerState) -> Result<Vec<[u8; 32]>, WeirollError> {
         let mut encoded_commands = vec![];
 
         // Build commands, and add state entries as needed
@@ -286,19 +288,19 @@ impl<'a> Planner<'a> {
                 // encoded_commands.push(hex_concat(&[pad_array(&args, 32, 0xff)]));
             } else {
                 // Standard command
-                let mut bytes: Vec<Bytes> = vec![
-                    command.call.selector.into(),
-                    flags.bits().to_le_bytes().to_vec().into(),
-                ];
+                let mut cmd = BytesMut::with_capacity(32);
+
+                cmd.put(&command.call.selector[..]);
+                cmd.put(&flags.bits().to_le_bytes()[..]);
 
                 // pad args to 6
                 args.resize(6, 0xff);
 
-                bytes.push(args.into());
-                bytes.push([ret.to_le()].into());
-                bytes.push(command.call.address.to_fixed_bytes().into());
+                cmd.put(&args[..]);
+                cmd.put_u8(ret.to_le());
+                cmd.put(&command.call.address.to_fixed_bytes()[..]);
 
-                encoded_commands.push(bytes.concat().into());
+                encoded_commands.push(cmd.freeze().to_vec().try_into().unwrap());
             }
         }
 
@@ -354,7 +356,7 @@ impl<'a> Planner<'a> {
         Ok(())
     }
 
-    pub fn plan(&self) -> Result<(Vec<Bytes>, Vec<Bytes>), WeirollError> {
+    pub fn plan(&self) -> Result<(Vec<[u8; 32]>, Vec<Bytes>), WeirollError> {
         // Tracks the last time a literal is used in the program
         let mut literal_visibility = Default::default();
 
@@ -456,7 +458,7 @@ mod tests {
             commands[0],
             "0x771602f7000001ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
 
         assert_eq!(state.len(), 2);
@@ -501,13 +503,13 @@ mod tests {
             commands[0],
             "0x771602f7000001ffffffff01eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
         assert_eq!(
             commands[1],
             "0x771602f7000102ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
         assert_eq!(state.len(), 3);
         assert_eq!(state[0], U256::from(1).encode());
@@ -539,13 +541,13 @@ mod tests {
             commands[0],
             "0x771602f7000000ffffffff01eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
         assert_eq!(
             commands[1],
             "0x771602f7000001ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
         assert_eq!(state.len(), 2);
         assert_eq!(state[0], U256::from(1).encode());
@@ -568,7 +570,7 @@ mod tests {
             commands[0],
             "0x367bbd780080ffffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
         assert_eq!(state.len(), 1);
         assert_eq!(state[0], "Hello, world!".to_string().encode());
@@ -593,7 +595,7 @@ mod tests {
             commands[0],
             "0xd824ccf3008081ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
         assert_eq!(state.len(), 2);
         assert_eq!(state[0], "Hello, ".to_string().encode());
@@ -622,13 +624,13 @@ mod tests {
             commands[0],
             "0xd824ccf3008081ffffffff81eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
         assert_eq!(
             commands[1],
             "0x367bbd780081ffffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
         assert_eq!(state.len(), 2);
         assert_eq!(state[0], "Hello, ".to_string().encode());
@@ -656,7 +658,7 @@ mod tests {
             commands[0],
             "0x08f389c800fefffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
         assert_eq!(state.len(), 0);
     }
@@ -756,14 +758,14 @@ mod tests {
             // Invoke subplanner
             "0xde792d5f0083fefffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
         assert_eq!(
             commands[1],
             // sum + 3
             "0x771602f7000102ffffffffffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                 .parse::<Bytes>()
-                .unwrap()
+                .unwrap()[..]
         );
     }
 
