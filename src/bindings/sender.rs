@@ -7,16 +7,14 @@ pub use sender::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types
+    non_camel_case_types,
 )]
 pub mod sender {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"sender\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static SENDER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
-        ::ethers::contract::Lazy::new(|| {
-            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
-        });
+    pub static SENDER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
+    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -123,38 +121,38 @@ pub mod sender {
         34,
         18,
         32,
-        11,
-        69,
-        118,
-        132,
-        37,
-        22,
-        162,
-        117,
-        109,
-        136,
-        56,
-        182,
-        83,
-        192,
-        201,
-        186,
-        239,
-        91,
-        178,
-        246,
-        199,
-        85,
-        236,
-        228,
-        191,
-        112,
-        196,
-        99,
-        181,
-        200,
-        153,
+        147,
+        167,
+        150,
+        156,
+        223,
+        179,
+        3,
         248,
+        144,
+        27,
+        251,
+        88,
+        173,
+        11,
+        213,
+        119,
+        237,
+        0,
+        61,
+        0,
+        55,
+        202,
+        204,
+        163,
+        137,
+        59,
+        212,
+        52,
+        139,
+        156,
+        202,
+        130,
         100,
         115,
         111,
@@ -163,13 +161,14 @@ pub mod sender {
         67,
         0,
         8,
-        17,
+        19,
         0,
         51,
     ];
     ///The bytecode of the contract.
-    pub static SENDER_BYTECODE: ::ethers::core::types::Bytes =
-        ::ethers::core::types::Bytes::from_static(__BYTECODE);
+    pub static SENDER_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __BYTECODE,
+    );
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -247,38 +246,38 @@ pub mod sender {
         34,
         18,
         32,
-        11,
-        69,
-        118,
-        132,
-        37,
-        22,
-        162,
-        117,
-        109,
-        136,
-        56,
-        182,
-        83,
-        192,
-        201,
-        186,
-        239,
-        91,
-        178,
-        246,
-        199,
-        85,
-        236,
-        228,
-        191,
-        112,
-        196,
-        99,
-        181,
-        200,
-        153,
+        147,
+        167,
+        150,
+        156,
+        223,
+        179,
+        3,
         248,
+        144,
+        27,
+        251,
+        88,
+        173,
+        11,
+        213,
+        119,
+        237,
+        0,
+        61,
+        0,
+        55,
+        202,
+        204,
+        163,
+        137,
+        59,
+        212,
+        52,
+        139,
+        156,
+        202,
+        130,
         100,
         115,
         111,
@@ -287,13 +286,14 @@ pub mod sender {
         67,
         0,
         8,
-        17,
+        19,
         0,
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static SENDER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
-        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
+    pub static SENDER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __DEPLOYED_BYTECODE,
+    );
     pub struct Sender<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for Sender<M> {
         fn clone(&self) -> Self {
@@ -313,9 +313,7 @@ pub mod sender {
     }
     impl<M> ::core::fmt::Debug for Sender<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(Sender))
-                .field(&self.address())
-                .finish()
+            f.debug_tuple(stringify!(Sender)).field(&self.address()).finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> Sender<M> {
@@ -325,11 +323,13 @@ pub mod sender {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(::ethers::contract::Contract::new(
-                address.into(),
-                SENDER_ABI.clone(),
-                client,
-            ))
+            Self(
+                ::ethers::contract::Contract::new(
+                    address.into(),
+                    SENDER_ABI.clone(),
+                    client,
+                ),
+            )
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -373,13 +373,17 @@ pub mod sender {
         ///Calls the contract's `sender` (0x67e404ce) function
         pub fn sender(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
+        ) -> ::ethers::contract::builders::ContractCall<
+            M,
+            ::ethers::core::types::Address,
+        > {
             self.0
                 .method_hash([103, 228, 4, 206], ())
                 .expect("method not found (this should never happen)")
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for Sender<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
+    for Sender<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -393,7 +397,7 @@ pub mod sender {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "sender", abi = "sender()")]
     pub struct SenderCall;
@@ -406,7 +410,7 @@ pub mod sender {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct SenderReturn(pub ::ethers::core::types::Address);
 }

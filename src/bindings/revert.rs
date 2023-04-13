@@ -7,16 +7,14 @@ pub use revert::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types
+    non_camel_case_types,
 )]
 pub mod revert {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"fail\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static REVERT_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
-        ::ethers::contract::Lazy::new(|| {
-            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
-        });
+    pub static REVERT_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
+    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -172,38 +170,38 @@ pub mod revert {
         34,
         18,
         32,
-        235,
-        75,
-        128,
-        96,
-        70,
-        62,
-        243,
-        117,
-        124,
-        226,
-        199,
-        167,
-        3,
-        55,
-        41,
-        183,
-        16,
-        240,
-        223,
-        46,
-        58,
-        38,
-        90,
-        72,
-        206,
+        165,
+        105,
+        203,
+        52,
+        30,
+        12,
+        251,
+        189,
+        23,
+        104,
+        230,
+        177,
+        56,
         81,
-        211,
-        101,
-        195,
+        188,
+        9,
+        253,
+        212,
         229,
-        139,
+        194,
+        174,
+        188,
+        252,
+        37,
+        245,
         249,
+        7,
+        141,
+        60,
+        90,
+        231,
+        153,
         100,
         115,
         111,
@@ -212,13 +210,14 @@ pub mod revert {
         67,
         0,
         8,
-        17,
+        19,
         0,
         51,
     ];
     ///The bytecode of the contract.
-    pub static REVERT_BYTECODE: ::ethers::core::types::Bytes =
-        ::ethers::core::types::Bytes::from_static(__BYTECODE);
+    pub static REVERT_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __BYTECODE,
+    );
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -344,38 +343,38 @@ pub mod revert {
         34,
         18,
         32,
-        235,
-        75,
-        128,
-        96,
-        70,
-        62,
-        243,
-        117,
-        124,
-        226,
-        199,
-        167,
-        3,
-        55,
-        41,
-        183,
-        16,
-        240,
-        223,
-        46,
-        58,
-        38,
-        90,
-        72,
-        206,
+        165,
+        105,
+        203,
+        52,
+        30,
+        12,
+        251,
+        189,
+        23,
+        104,
+        230,
+        177,
+        56,
         81,
-        211,
-        101,
-        195,
+        188,
+        9,
+        253,
+        212,
         229,
-        139,
+        194,
+        174,
+        188,
+        252,
+        37,
+        245,
         249,
+        7,
+        141,
+        60,
+        90,
+        231,
+        153,
         100,
         115,
         111,
@@ -384,13 +383,14 @@ pub mod revert {
         67,
         0,
         8,
-        17,
+        19,
         0,
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static REVERT_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
-        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
+    pub static REVERT_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __DEPLOYED_BYTECODE,
+    );
     pub struct Revert<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for Revert<M> {
         fn clone(&self) -> Self {
@@ -410,9 +410,7 @@ pub mod revert {
     }
     impl<M> ::core::fmt::Debug for Revert<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(Revert))
-                .field(&self.address())
-                .finish()
+            f.debug_tuple(stringify!(Revert)).field(&self.address()).finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> Revert<M> {
@@ -422,11 +420,13 @@ pub mod revert {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(::ethers::contract::Contract::new(
-                address.into(),
-                REVERT_ABI.clone(),
-                client,
-            ))
+            Self(
+                ::ethers::contract::Contract::new(
+                    address.into(),
+                    REVERT_ABI.clone(),
+                    client,
+                ),
+            )
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -474,7 +474,8 @@ pub mod revert {
                 .expect("method not found (this should never happen)")
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for Revert<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
+    for Revert<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -488,7 +489,7 @@ pub mod revert {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "fail", abi = "fail()")]
     pub struct FailCall;

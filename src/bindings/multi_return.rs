@@ -7,16 +7,14 @@ pub use multi_return::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types
+    non_camel_case_types,
 )]
 pub mod multi_return {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"j\",\"type\":\"uint256\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"Calculated\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"intTuple\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"arg\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"tupleConsumer\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static MULTIRETURN_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
-        ::ethers::contract::Lazy::new(|| {
-            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
-        });
+    pub static MULTIRETURN_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
+    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -247,38 +245,38 @@ pub mod multi_return {
         34,
         18,
         32,
-        195,
-        252,
-        187,
-        240,
+        191,
+        191,
+        137,
+        212,
+        107,
+        167,
         45,
-        62,
-        62,
-        113,
-        37,
-        225,
-        211,
-        62,
-        201,
-        201,
-        11,
-        109,
-        123,
-        90,
-        127,
-        1,
-        142,
-        207,
-        226,
-        119,
-        92,
-        14,
-        237,
-        16,
-        191,
-        151,
-        169,
-        191,
+        12,
+        228,
+        108,
+        70,
+        144,
+        110,
+        23,
+        18,
+        249,
+        152,
+        72,
+        116,
+        55,
+        20,
+        219,
+        172,
+        140,
+        212,
+        6,
+        12,
+        3,
+        144,
+        154,
+        222,
+        75,
         100,
         115,
         111,
@@ -287,13 +285,14 @@ pub mod multi_return {
         67,
         0,
         8,
-        17,
+        19,
         0,
         51,
     ];
     ///The bytecode of the contract.
-    pub static MULTIRETURN_BYTECODE: ::ethers::core::types::Bytes =
-        ::ethers::core::types::Bytes::from_static(__BYTECODE);
+    pub static MULTIRETURN_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __BYTECODE,
+    );
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -493,38 +492,38 @@ pub mod multi_return {
         34,
         18,
         32,
-        195,
-        252,
-        187,
-        240,
+        191,
+        191,
+        137,
+        212,
+        107,
+        167,
         45,
-        62,
-        62,
-        113,
-        37,
-        225,
-        211,
-        62,
-        201,
-        201,
-        11,
-        109,
-        123,
-        90,
-        127,
-        1,
-        142,
-        207,
-        226,
-        119,
-        92,
-        14,
-        237,
-        16,
-        191,
-        151,
-        169,
-        191,
+        12,
+        228,
+        108,
+        70,
+        144,
+        110,
+        23,
+        18,
+        249,
+        152,
+        72,
+        116,
+        55,
+        20,
+        219,
+        172,
+        140,
+        212,
+        6,
+        12,
+        3,
+        144,
+        154,
+        222,
+        75,
         100,
         115,
         111,
@@ -533,13 +532,14 @@ pub mod multi_return {
         67,
         0,
         8,
-        17,
+        19,
         0,
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static MULTIRETURN_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
-        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
+    pub static MULTIRETURN_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __DEPLOYED_BYTECODE,
+    );
     pub struct MultiReturn<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for MultiReturn<M> {
         fn clone(&self) -> Self {
@@ -559,9 +559,7 @@ pub mod multi_return {
     }
     impl<M> ::core::fmt::Debug for MultiReturn<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(MultiReturn))
-                .field(&self.address())
-                .finish()
+            f.debug_tuple(stringify!(MultiReturn)).field(&self.address()).finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> MultiReturn<M> {
@@ -571,11 +569,13 @@ pub mod multi_return {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(::ethers::contract::Contract::new(
-                address.into(),
-                MULTIRETURN_ABI.clone(),
-                client,
-            ))
+            Self(
+                ::ethers::contract::Contract::new(
+                    address.into(),
+                    MULTIRETURN_ABI.clone(),
+                    client,
+                ),
+            )
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -643,18 +643,26 @@ pub mod multi_return {
         ///Gets the contract's `Calculated` event
         pub fn calculated_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, CalculatedFilter> {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            CalculatedFilter,
+        > {
             self.0.event()
         }
         /// Returns an `Event` builder for all the events of this contract.
         pub fn events(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, CalculatedFilter> {
-            self.0
-                .event_with_filter(::core::default::Default::default())
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            CalculatedFilter,
+        > {
+            self.0.event_with_filter(::core::default::Default::default())
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for MultiReturn<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
+    for MultiReturn<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -667,7 +675,7 @@ pub mod multi_return {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(name = "Calculated", abi = "Calculated(uint256)")]
     pub struct CalculatedFilter {
@@ -682,7 +690,7 @@ pub mod multi_return {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "intTuple", abi = "intTuple()")]
     pub struct IntTupleCall;
@@ -695,7 +703,7 @@ pub mod multi_return {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "tupleConsumer", abi = "tupleConsumer(uint256)")]
     pub struct TupleConsumerCall {
@@ -712,11 +720,12 @@ pub mod multi_return {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded) = <IntTupleCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded)
+                = <IntTupleCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::IntTuple(decoded));
             }
-            if let Ok(decoded) = <TupleConsumerCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded)
+                = <TupleConsumerCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::TupleConsumer(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -725,8 +734,12 @@ pub mod multi_return {
     impl ::ethers::core::abi::AbiEncode for MultiReturnCalls {
         fn encode(self) -> Vec<u8> {
             match self {
-                Self::IntTuple(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::TupleConsumer(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::IntTuple(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::TupleConsumer(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
             }
         }
     }
@@ -757,7 +770,7 @@ pub mod multi_return {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct IntTupleReturn(
         pub ::ethers::core::types::U256,

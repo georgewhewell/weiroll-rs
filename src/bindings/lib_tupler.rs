@@ -7,16 +7,14 @@ pub use lib_tupler::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types
+    non_camel_case_types,
 )]
 pub mod lib_tupler {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"tuple\",\"type\":\"bytes\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"extractElement\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\",\"components\":[]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static LIBTUPLER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
-        ::ethers::contract::Lazy::new(|| {
-            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
-        });
+    pub static LIBTUPLER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
+    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -364,38 +362,38 @@ pub mod lib_tupler {
         34,
         18,
         32,
-        160,
-        94,
-        185,
-        4,
-        48,
-        125,
-        42,
-        100,
-        119,
-        126,
-        23,
-        119,
-        44,
-        42,
+        134,
         177,
+        176,
+        176,
+        235,
+        195,
+        84,
+        149,
+        155,
         167,
-        160,
-        236,
-        150,
-        40,
-        247,
-        34,
+        208,
+        201,
+        245,
         47,
-        200,
-        161,
-        231,
-        52,
-        211,
-        142,
+        221,
+        139,
+        34,
+        226,
+        176,
+        38,
+        153,
+        127,
+        195,
+        150,
+        134,
         66,
-        56,
-        151,
+        98,
+        202,
+        53,
+        76,
+        78,
+        208,
         100,
         115,
         111,
@@ -404,13 +402,14 @@ pub mod lib_tupler {
         67,
         0,
         8,
-        17,
+        19,
         0,
         51,
     ];
     ///The bytecode of the contract.
-    pub static LIBTUPLER_BYTECODE: ::ethers::core::types::Bytes =
-        ::ethers::core::types::Bytes::from_static(__BYTECODE);
+    pub static LIBTUPLER_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __BYTECODE,
+    );
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -726,38 +725,38 @@ pub mod lib_tupler {
         34,
         18,
         32,
-        160,
-        94,
-        185,
-        4,
-        48,
-        125,
-        42,
-        100,
-        119,
-        126,
-        23,
-        119,
-        44,
-        42,
+        134,
         177,
+        176,
+        176,
+        235,
+        195,
+        84,
+        149,
+        155,
         167,
-        160,
-        236,
-        150,
-        40,
-        247,
-        34,
+        208,
+        201,
+        245,
         47,
-        200,
-        161,
-        231,
-        52,
-        211,
-        142,
+        221,
+        139,
+        34,
+        226,
+        176,
+        38,
+        153,
+        127,
+        195,
+        150,
+        134,
         66,
-        56,
-        151,
+        98,
+        202,
+        53,
+        76,
+        78,
+        208,
         100,
         115,
         111,
@@ -766,13 +765,14 @@ pub mod lib_tupler {
         67,
         0,
         8,
-        17,
+        19,
         0,
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static LIBTUPLER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
-        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
+    pub static LIBTUPLER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
+        __DEPLOYED_BYTECODE,
+    );
     pub struct LibTupler<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for LibTupler<M> {
         fn clone(&self) -> Self {
@@ -792,9 +792,7 @@ pub mod lib_tupler {
     }
     impl<M> ::core::fmt::Debug for LibTupler<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(LibTupler))
-                .field(&self.address())
-                .finish()
+            f.debug_tuple(stringify!(LibTupler)).field(&self.address()).finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> LibTupler<M> {
@@ -804,11 +802,13 @@ pub mod lib_tupler {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(::ethers::contract::Contract::new(
-                address.into(),
-                LIBTUPLER_ABI.clone(),
-                client,
-            ))
+            Self(
+                ::ethers::contract::Contract::new(
+                    address.into(),
+                    LIBTUPLER_ABI.clone(),
+                    client,
+                ),
+            )
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -860,7 +860,8 @@ pub mod lib_tupler {
                 .expect("method not found (this should never happen)")
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for LibTupler<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
+    for LibTupler<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -874,7 +875,7 @@ pub mod lib_tupler {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "extractElement", abi = "extractElement(bytes,uint256)")]
     pub struct ExtractElementCall {
@@ -890,7 +891,7 @@ pub mod lib_tupler {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct ExtractElementReturn(pub [u8; 32]);
 }
