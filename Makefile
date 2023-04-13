@@ -1,3 +1,8 @@
+bindings: rustfmt
+
+rustfmt: src/bindings
+	rustfmt src/bindings/*.rs
+
 src/bindings: weiroll/node_modules
 	forge bind \
 		--hardhat \
@@ -11,3 +16,5 @@ weiroll/node_modules:
 
 clean:
 	rm -rf ./src/bindings
+
+.PHONY: bindings clean rustfmt
