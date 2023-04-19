@@ -9,7 +9,6 @@ Port of the [weiroll-js](https://github.com/weiroll/weiroll.js) library.
 Most features are working (for my use-case) and passing tests.
 
 Missing:
- - [ ] Extended command mode
  - [ ] Subplanner support
 
 PR to add support for these features is very welcome!
