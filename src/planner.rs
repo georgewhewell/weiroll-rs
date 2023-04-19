@@ -254,38 +254,21 @@ impl<'a> Planner<'a> {
             }
 
             if (flags & CommandFlags::EXTENDED_COMMAND) == CommandFlags::EXTENDED_COMMAND {
-                // todo
-                tracing::warn!("extended command");
                 // Extended command
-                // encoded_commands.push(
-                //     hex_concat(&[
-                //         command
-                //             .call
-                //             .contract
-                //             .interface
-                //             .get_sighash(&command.call.fragment),
-                //         &[
-                //             flags,
-                //             0,
-                //             0,
-                //             0,
-                //             0,
-                //             0,
-                //             0,
-                //             ret.low_u64() as u8,
-                //             ret.low_u64() as u8,
-                //             ret.low_u64() as u8,
-                //             ret.low_u64() as u8,
-                //             ret.low_u64() as u8,
-                //             ret.low_u64() as u8,
-                //             ret.low_u64() as u8,
-                //             ret.low_u64() as u8,
-                //         ],
-                //         &command.call.contract,
-                //     ])
-                //     .to_string(),
-                // );
-                // encoded_commands.push(hex_concat(&[pad_array(&args, 32, 0xff)]));
+                let mut cmd = BytesMut::with_capacity(32);
+
+                cmd.put(&command.call.selector[..]);
+                cmd.put(&flags.bits().to_le_bytes()[..]);
+                cmd.put(&[0u8; 6][..]);
+                cmd.put_u8(ret);
+                cmd.put(&command.call.address.to_fixed_bytes()[..]);
+
+                // push first command, indicating extended cmd
+                encoded_commands.push(cmd.to_vec().try_into().unwrap());
+
+                // use the next command for the actual args
+                args.resize(32, 0xff);
+                encoded_commands.push(args.try_into().unwrap());
             } else {
                 // Standard command
                 let mut cmd = BytesMut::with_capacity(32);
@@ -300,7 +283,7 @@ impl<'a> Planner<'a> {
                 cmd.put_u8(ret.to_le());
                 cmd.put(&command.call.address.to_fixed_bytes()[..]);
 
-                encoded_commands.push(cmd.freeze().to_vec().try_into().unwrap());
+                encoded_commands.push(cmd.to_vec().try_into().unwrap());
             }
         }
 
@@ -432,6 +415,13 @@ mod tests {
         ReadOnlySubplanContract,
         r#"[
             function execute(bytes32[] commands, bytes[] state)
+        ]"#,
+    );
+
+    abigen!(
+        ExtendedCommandContract,
+        r#"[
+            function test(uint a, uint b, uint c, uint d, uint e, uint f, uint g) returns(uint)
         ]"#,
     );
 
@@ -794,5 +784,39 @@ mod tests {
             .expect("can add subplan");
 
         let (_commands, _state) = planner.plan().expect("plan");
+    }
+
+    #[test]
+    fn test_uses_extended_commands_where_necessary() {
+        let mut planner = Planner::default();
+        planner
+            .call::<TestCall>(
+                addr(),
+                vec![
+                    U256::from(1).into(),
+                    U256::from(2).into(),
+                    U256::from(3).into(),
+                    U256::from(4).into(),
+                    U256::from(5).into(),
+                    U256::from(6).into(),
+                    U256::from(7).into(),
+                ],
+                ParamType::Uint(256),
+            )
+            .unwrap();
+        let (commands, _state) = planner.plan().expect("plan");
+        assert_eq!(commands.len(), 2);
+        assert_eq!(
+            commands[0],
+            "0xe473580d40000000000000ffeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                .parse::<Bytes>()
+                .unwrap()[..]
+        );
+        assert_eq!(
+            commands[1],
+            "0x00010203040506ffffffffffffffffffffffffffffffffffffffffffffffffff"
+                .parse::<Bytes>()
+                .unwrap()[..]
+        );
     }
 }
